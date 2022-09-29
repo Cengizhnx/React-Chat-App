@@ -1,0 +1,10 @@
+.hoverMessage::hover {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .hoverMessage::hover {
+    background-color: aqua;
+  }

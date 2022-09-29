@@ -1,23 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import LandingPage from './components/Chat/LandingPage';
+import Header from './components/Persons/Header';
+import MessageList from './components/Persons/MessageList';
+import Search from './components/Persons/Search';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ backgroundColor: "#26262c" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
+      <div style={{ backgroundColor: "#191a20" }} className="divHidden text-white sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
+        <Header></Header>
+        <Search></Search>
+        <MessageList></MessageList>
+
+      </div>
+      <div className="w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
+        <LandingPage></LandingPage>
+      </div>
     </div>
   );
 }
