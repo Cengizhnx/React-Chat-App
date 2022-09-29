@@ -9,7 +9,7 @@ function Header() {
                 <img className='w-10 rounded-full shadow-2xl shadow-neutral-900' src="https://pbs.twimg.com/profile_images/1476294398782672898/eBuhTSsJ_400x400.jpg" alt="landing" />
                 <h1 className='text-base tracking-wider'>Cengiz Drms</h1>
                 <Link to="/login">
-                    <AiOutlineLogin className="h-6 w-6 hover:bg-slate-200 hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                    <AiOutlineLogin className="h-6 w-6 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                 </Link>
             </div>
         </div>

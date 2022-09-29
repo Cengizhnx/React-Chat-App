@@ -1,16 +1,21 @@
 import { TextInput, Label, Button } from 'flowbite-react'
 import React from 'react'
 import { HiCheckCircle, HiMail, HiKey } from "react-icons/hi";
+import { AiOutlineLogin } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 
 function Register() {
     return (
         <div style={{ backgroundColor: "#191a20" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
-            <div style={{ backgroundColor: "#323237" }} className='w-2/6 h-4/5 flex flex-col rounded-2xl'>
+            <div style={{ backgroundColor: "#323237" }} className='relative xs:w-full xs:justify-center md:w-4/6 lg:w-3/4 xl:w-1/3 xs:h-full md:h-4/5 flex flex-col rounded-2xl'>
+                <Link to="/login">
+                    <AiOutlineLogin className="absolute m-4 h-6 w-6 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                </Link>
                 <div className='p-8'>
-                    <div className='w-full flex flex-row items-center justify-center'>
-                        <div className='w-6/12 flex flex-row justify-center'>
-                            <span className="text-4xl shadow-2xl shadow-stone-900 before:block before:absolute before:-inset-3 before:-skew-y-3 before:bg-zinc-500 relative inline-block">
-                                <span className="relative text-white tracking-wide">REGISTER</span>
+                    <div className='w-full flex xs:flex-col md:flex-row items-center justify-center'>
+                        <div className='w-6/12 flex flex-row justify-center xs:mb-10 md:mb-0'>
+                            <span className="text-4xl shadow-2xl shadow-stone-900 before:block before:absolute xs:before:-inset-1 sm:before:-inset-3 before:-skew-y-3 before:bg-zinc-500 relative inline-block">
+                                <span className="xs:text-base sm:text-3xl md:text-4xl relative text-white tracking-wide">REGISTER</span>
                             </span>
                         </div>
                         <div className='w-6/12 flex flex-col items-center'>
