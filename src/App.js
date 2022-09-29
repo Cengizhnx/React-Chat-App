@@ -1,21 +1,20 @@
 import './App.css';
-import LandingPage from './components/Chat/LandingPage';
-import Header from './components/Persons/Header';
-import MessageList from './components/Persons/MessageList';
-import Search from './components/Persons/Search';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from './page/Login/Login';
+import Home from './page/Home';
+import Register from './page/Register/Register';
 
 function App() {
   return (
-    <div style={{ backgroundColor: "#26262c" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
-      <div style={{ backgroundColor: "#191a20" }} className="divHidden text-white sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
-        <Header></Header>
-        <Search></Search>
-        <MessageList></MessageList>
+    <div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+        </Routes>
+      </Router>
 
-      </div>
-      <div className="w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
-        <LandingPage></LandingPage>
-      </div>
     </div>
   );
 }
