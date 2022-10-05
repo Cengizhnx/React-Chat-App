@@ -6,8 +6,9 @@ import { AiOutlineLogin } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { auth, setUpRecaptcha, userRegister } from '../../firebase';
+import { auth, getUserPhoto, setUpRecaptcha, storage, userRegister } from '../../firebase';
 import toast, { Toaster } from 'react-hot-toast';
+import { ref, uploadBytes } from 'firebase/storage';
 
 function Register() {
 
@@ -19,6 +20,8 @@ function Register() {
     const [otp, setOtp] = useState("")
     const [flag, setFlag] = useState(false)
     const [confirmObj, setConfirmObj] = useState("")
+    const [image, setImage] = useState(null)
+
 
     const getOTP = async (e) => {
         e.preventDefault()
@@ -46,6 +49,7 @@ function Register() {
             const res = await confirmObj.confirm(otp);
             if (res) {
                 await userRegister(value)
+                uploadImage()
                 navigate('/', {
                     replace: true
                 })
@@ -55,6 +59,35 @@ function Register() {
             toast.error(error.message)
         }
 
+    }
+
+    const uploadImage = () => {
+        if (image == null) {
+            const url = getUserPhoto()
+            setImage(url)
+        }
+        else {
+            const imageRef = ref(storage, `images/users/${auth.currentUser.uid}`)
+            uploadBytes(imageRef, image).then(() => {
+                toast.success("Image added")
+            });
+        }
+
+    }
+
+    const handleConvert = (e) => {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+
+        reader.onload = () => {
+            const img = document.getElementById('myimg');
+            img.setAttribute('src', reader.result);
+            setImage(e.target.files[0])
+        };
+        reader.onerror = error => {
+            toast.error("Error: ", error);
+        };
     }
 
     return (
@@ -69,9 +102,9 @@ function Register() {
                             <span className="xs:text-base sm:text-3xl md:text-4xl relative text-white tracking-wide">REGISTER</span>
                         </span>
                         <div className='w-6/12 mt-10 flex flex-col items-center'>
-                            <img className='w-2/4 rounded-full shadow-xl shadow-neutral-900' src="https://pbs.twimg.com/profile_images/1476294398782672898/eBuhTSsJ_400x400.jpg" alt="landing" />
+                            <img className='w-32 h-32 object-cover rounded-full shadow-xl shadow-neutral-900' id='myimg' src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt="landing" />
                             <label className="mt-5 block">
-                                <input type="file" className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
+                                <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>
                         </div>
                     </div>

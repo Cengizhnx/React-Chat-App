@@ -4,6 +4,7 @@ import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBA7nqsUa_jy4k1jmryu_drqFpE-v_ayhc",
@@ -17,6 +18,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app)
+export const storage = getStorage(app);
+
 
 // User Phone Register
 
@@ -58,6 +61,21 @@ onAuthStateChanged(auth, (user) => {
     store.dispatch(logout())
   }
 })
+
+// User Photo Add
+
+export const getUserPhoto = () => {
+  getDownloadURL(ref(storage, `images/users/${auth.currentUser.uid}`))
+    .then((url) => {
+      const img = document.getElementById('myimg');
+      img.setAttribute('src', url);
+      return url;
+    })
+    .catch((error) => {
+      toast.error(error.message);
+    });
+}
+
 
 
 
