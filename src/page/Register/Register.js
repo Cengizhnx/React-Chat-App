@@ -102,7 +102,7 @@ function Register() {
                             <span className="xs:text-base sm:text-3xl md:text-4xl relative text-white tracking-wide">REGISTER</span>
                         </span>
                         <div className='w-6/12 mt-10 flex flex-col items-center'>
-                            <img className='w-32 h-32 object-cover rounded-full shadow-xl shadow-neutral-900' id='myimg' src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt="landing" />
+                            <img className='w-28 h-28 object-cover rounded-full shadow-xl shadow-neutral-900' id='myimg' src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt="landing" />
                             <label className="mt-5 block">
                                 <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>

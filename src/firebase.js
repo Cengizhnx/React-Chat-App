@@ -1,10 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
+import { collection, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBA7nqsUa_jy4k1jmryu_drqFpE-v_ayhc",
@@ -75,6 +77,45 @@ export const getUserPhoto = () => {
       toast.error(error.message);
     });
 }
+
+const productConverter = {
+  fromFirestore: (snapshot, options) => {
+    const data = snapshot.data(options)
+
+    return {
+      id: snapshot.id,
+      ...data
+    }
+
+  }
+}
+
+export const GetUserProfile = () => {
+  const [cart] = useCollectionData(collection(db, "users").withConverter(productConverter))
+  return cart;
+}
+
+// User Update
+
+export const userUpdate = async (name, phone, desc) => {
+  try {
+    await updateProfile(auth.currentUser, {
+      displayName: name,
+      phoneNumber: phone,
+    })
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      uid: auth.currentUser.uid,
+      name: name,
+      phone_number: phone,
+      description: desc,
+      timeStamp: serverTimestamp()
+    });
+    toast.success("Profile Updated")
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
 
 
 
