@@ -1,3 +1,5 @@
 .bgEffect{
-    background-image: url(../../assets/black_background_fabric-wallpaper-1920x1080.jpg)
+    background-image: url(../../assets/landingBg.jpg);
+    background-position: center;
+    background-size: 100%;
 }

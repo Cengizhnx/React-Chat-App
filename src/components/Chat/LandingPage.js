@@ -1,10 +1,10 @@
 import React from 'react'
 import Landing from "../../assets/Landing.gif";
-import {  } from "./styles.css";
+import "./styles.css";
 
 function LandingPage() {
     return (
-        <div style={{ backgroundColor: "#323237" }} className='w-full h-full z-10 flex items-center justify-center text-white border-l-2 border-neutral-700 xs:rounded-r-none md:rounded-r-2xl'>
+        <div className='bgEffect w-full h-full z-10 flex items-center justify-center text-white border-l-2 border-neutral-700 xs:rounded-r-none md:rounded-r-2xl'>
             <div className='w-full flex flex-col items-center justify-center'>
                 <img className='w-2/6 rounded-full shadow-2xl shadow-neutral-900' src={Landing} alt="landing" />
                 <h1 className='text-3xl my-8 tracking-wide'>ChatApp Web</h1>
