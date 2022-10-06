@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { TextInput, Label, Button } from 'flowbite-react'
 import { GrUpdate } from "react-icons/gr";
-import { AiOutlineLogin } from "react-icons/ai";
+import { SiAboutdotme } from "react-icons/si";
 import Loading from '../../components/Loading';
 import { auth, getUserPhoto, storage, userUpdate } from '../../firebase';
 import { useSelector } from 'react-redux';
 import { ref, uploadBytes } from 'firebase/storage';
 import toast, { Toaster } from 'react-hot-toast';
-import { HiPhone, HiUser } from "react-icons/hi";
+import { HiPhone, HiUser,HiChevronDoubleLeft } from "react-icons/hi";
 
 function Profile({ data }) {
 
@@ -80,7 +80,7 @@ function Profile({ data }) {
             {
                 user && !status && <div className='flex flex-col items-center h-full justify-center '>
                     <button onClick={hidevisible_home}>
-                        <AiOutlineLogin className="absolute m-4 h-6 w-6 top-4 left-4 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                        <HiChevronDoubleLeft className="absolute m-4 h-5 w-5 top-5 left-5 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                     </button>
 
                     <form onSubmit={handleSubmit} className="flex flex-col w-3/4">
@@ -143,6 +143,7 @@ function Profile({ data }) {
                                 required={true}
                                 placeholder="Hi! I'm usign Chat App !"
                                 value={desc}
+                                icon={SiAboutdotme}
                                 onChange={(e) => setDesc(e.target.value)}
                             />
                         </div>

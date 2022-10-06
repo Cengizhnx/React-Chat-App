@@ -78,6 +78,18 @@ export const getUserPhoto = () => {
     });
 }
 
+export const getUserPhoto2 = () => {
+  getDownloadURL(ref(storage, `images/users/${auth.currentUser.uid}`))
+    .then((url) => {
+      const img = document.getElementById('myimg2');
+      img.setAttribute('src', url);
+      return url;
+    })
+    .catch((error) => {
+      toast.error(error.message);
+    });
+}
+
 const productConverter = {
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options)

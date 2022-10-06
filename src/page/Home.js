@@ -33,7 +33,7 @@ function Home() {
             {
                 user && data && <div style={{ backgroundColor: "#26262c" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
                     <div style={{ backgroundColor: "#191a20" }} id='div_left' className="text-white sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
-                        <Header></Header>
+                        <Header data={data}></Header>
                         <Search></Search>
                         <MessageList></MessageList>
 
