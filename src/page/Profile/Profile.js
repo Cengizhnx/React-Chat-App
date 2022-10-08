@@ -85,7 +85,7 @@ function Profile({ data }) {
 
                     <form onSubmit={handleSubmit} className="flex flex-col w-3/4">
                         <div className='flex flex-col items-center justify-center my-8'>
-                            <img className='w-36 h-36 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg' alt="landing" />
+                            <img className='w-36 h-36 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg' alt="" />
                             <label className="mt-5 block">
                                 <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>

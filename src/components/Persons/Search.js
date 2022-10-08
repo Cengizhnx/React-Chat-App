@@ -2,7 +2,6 @@ import { TextInput } from 'flowbite-react'
 import React from 'react'
 import { HiOutlineSearch } from "react-icons/hi";
 
-
 function Search() {
     return (
         <div className='w-full flex items-center justify-center h-12 my-2'>

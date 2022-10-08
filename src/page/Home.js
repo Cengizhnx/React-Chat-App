@@ -8,6 +8,7 @@ import Loading from '../components/Loading'
 import { useNavigate } from 'react-router-dom'
 import { GetUserProfile } from '../firebase'
 import Profile from './Profile/Profile'
+import Index from '../components/Chat/Message/Index'
 
 function Home() {
 
@@ -41,8 +42,11 @@ function Home() {
                     <div style={{ backgroundColor: "#191a20", display: "none" }} id='div_right' className="text-white xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
                         <Profile data={data}></Profile>
                     </div>
-                    <div className="divHidden w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
+                    <div id='landing1' className="divHidden w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
                         <LandingPage></LandingPage>
+                    </div>
+                    <div style={{ backgroundColor: "#191a20", display: "none" }} id="landing2" className="divHidden w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
+                        <Index></Index>
                     </div>
                 </div>
             }

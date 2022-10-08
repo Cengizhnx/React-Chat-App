@@ -41,7 +41,7 @@ function Header({ data }) {
                 <button onClick={hidevisible_menu}>
                     <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg2' alt="" />
                 </button>
-                <h1 className='text-base tracking-wider'>{user.name}</h1>
+                <h1 className='text-base tracking-wider'>@{user.username}</h1>
                 <Link onClick={handleLogout} >
                     <AiOutlineLogin className="h-6 w-6 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                 </Link>

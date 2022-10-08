@@ -25,10 +25,15 @@ export const storage = getStorage(app);
 
 // User Phone Register
 
-export const userRegister = async (value) => {
+export const userRegister = async (value, username) => {
   try {
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    await updateProfile(auth.currentUser, {
+      displayName: username,
+      phoneNumber: value,
+    })
+    await setDoc(doc(db, "users", username), {
       name: "",
+      username: username,
       phone_number: value,
       description: "",
       uid: auth.currentUser.uid,
@@ -111,14 +116,11 @@ export const GetUserProfile = () => {
 
 export const userUpdate = async (name, phone, desc) => {
   try {
-    await updateProfile(auth.currentUser, {
-      displayName: name,
-      phoneNumber: phone,
-    })
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    await setDoc(doc(db, "users", auth.currentUser.displayName), {
       uid: auth.currentUser.uid,
       name: name,
       phone_number: phone,
+      username: auth.currentUser.displayName,
       description: desc,
       timeStamp: serverTimestamp()
     });
