@@ -13,6 +13,7 @@ import Index from '../components/Chat/Message/Index'
 function Home() {
 
     const { user } = useSelector(state => state.users)
+    console.log(user);
     const data = GetUserProfile()
     const status = useSelector(state => state.users.status)
     const navigate = useNavigate()

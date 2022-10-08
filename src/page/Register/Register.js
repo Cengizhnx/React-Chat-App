@@ -1,6 +1,6 @@
 import { TextInput, Label, Button } from 'flowbite-react'
 import React, { useState } from 'react'
-import { HiKey, HiUser } from "react-icons/hi";
+import { HiKey, HiSearch, HiAtSymbol } from "react-icons/hi";
 import { VscCheckAll } from "react-icons/vsc";
 import { AiOutlineLogin } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,8 +14,6 @@ import { doc, getDoc } from 'firebase/firestore';
 function Register() {
 
     const navigate = useNavigate()
-
-    console.log(auth.currentUser);
 
     const [value, setValue] = useState("")
     const [username, setUsername] = useState("")
@@ -42,7 +40,7 @@ function Register() {
             }
         }
     }
-    
+
     const getOTP = async (e) => {
         e.preventDefault()
         if (value === "" || value === undefined) {
@@ -129,12 +127,12 @@ function Register() {
                                 placeholder="Username"
                                 required={true}
                                 value={username}
-                                icon={HiUser}
+                                icon={HiAtSymbol}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                             <div className='flex justify-center items-center my-5'>
                                 <Button onClick={usernameSearch} color="light" type="submit">
-                                    <VscCheckAll className="mr-2 h-5 w-5" />
+                                    <HiSearch className="mr-2 h-5 w-5" />
                                     Check
                                 </Button>
                             </div>

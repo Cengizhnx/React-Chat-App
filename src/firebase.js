@@ -129,9 +129,3 @@ export const userUpdate = async (name, phone, desc) => {
     toast.error(error.message)
   }
 }
-
-
-
-
-
-
