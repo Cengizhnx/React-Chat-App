@@ -95,6 +95,7 @@ export const getUserPhoto2 = () => {
     });
 }
 
+
 const productConverter = {
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options)
@@ -114,7 +115,7 @@ export const GetUserProfile = () => {
 
 // User Update
 
-export const userUpdate = async (name, phone, desc) => {
+export const userUpdate = async (name, phone, desc, downloadURL) => {
   try {
     await setDoc(doc(db, "users", auth.currentUser.displayName), {
       uid: auth.currentUser.uid,
@@ -122,6 +123,7 @@ export const userUpdate = async (name, phone, desc) => {
       phone_number: phone,
       username: auth.currentUser.displayName,
       description: desc,
+      photoURL: downloadURL,
       timeStamp: serverTimestamp()
     });
     toast.success("Profile Updated")

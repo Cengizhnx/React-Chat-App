@@ -3,11 +3,12 @@ import { TextInput, Label, Button } from 'flowbite-react'
 import { GrUpdate } from "react-icons/gr";
 import { SiAboutdotme } from "react-icons/si";
 import Loading from '../../components/Loading';
-import { auth, getUserPhoto, storage, userUpdate } from '../../firebase';
+import { auth, storage, userUpdate } from '../../firebase';
 import { useSelector } from 'react-redux';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import toast, { Toaster } from 'react-hot-toast';
-import { HiPhone, HiUser,HiChevronDoubleLeft } from "react-icons/hi";
+import { HiPhone, HiUser, HiChevronDoubleLeft } from "react-icons/hi";
+import { updateProfile } from 'firebase/auth';
 
 function Profile({ data }) {
 
@@ -28,32 +29,41 @@ function Profile({ data }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            uploadImage()
-            await userUpdate(name, phone, desc)
+            updatePhoto()
         } catch (error) {
             toast.error(error.message)
         }
     }
 
-    const uploadImage = () => {
-        if (image == null) {
-            const url = getUserPhoto()
-            setImage(url)
+    const updatePhoto = async () => {
+        const file = image;
+        const storageRef = ref(storage, `images/users/${auth.currentUser.uid}`);
+
+        if (file === null || file === undefined) {
+            await userUpdate(name, phone, desc, user.photoURL)
         }
         else {
-            const imageRef = ref(storage, `images/users/${user.uid}`)
-            uploadBytes(imageRef, image).then(() => {
-                toast.success("Image added")
+            await uploadBytesResumable(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(async (downloadURL) => {
+                    try {
+                        await updateProfile(auth.currentUser, {
+                            photoURL: downloadURL,
+                        });
+                        await userUpdate(name, phone, desc, downloadURL)
+                    } catch (err) {
+                        console.log(err);
+                    }
+                });
             });
         }
 
     }
 
-    useEffect(() => {
-        if (!status) {
-            getUserPhoto()
-        }
-    }, [status])
+    // useEffect(() => {
+    //     if (!status) {
+    //         getUserPhoto()
+    //     }
+    // }, [status])
 
     const handleConvert = (e) => {
 
@@ -85,7 +95,7 @@ function Profile({ data }) {
 
                     <form onSubmit={handleSubmit} className="flex flex-col w-3/4">
                         <div className='flex flex-col items-center justify-center my-8'>
-                            <img className='w-36 h-36 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg' alt="" />
+                            <img className='w-36 h-36 object-cover rounded-full shadow-2xl shadow-neutral-900' src={user.photoURL} id='myimg' alt="" />
                             <label className="mt-5 block">
                                 <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>

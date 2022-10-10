@@ -3,7 +3,7 @@ import React from 'react'
 
 function Message() {
   return (
-    <div style={{ backgroundColor: "#323237" }} className='w-full h-20 rounded-br-xl flex items-center border-t-2 border-stone-700'>
+    <div style={{ backgroundColor: "#323237" }} id="chat_footer" className='w-full h-20 rounded-br-xl flex items-center border-t-2 border-stone-700'>
       <div className='w-full px-5 flex flex-row items-center justify-between' >
         <button >
           <img className='w-8 h-8 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg2' alt="" />

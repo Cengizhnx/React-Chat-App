@@ -2,9 +2,12 @@ import { TextInput } from 'flowbite-react'
 import { useState } from 'react';
 import { HiOutlineSearch } from "react-icons/hi";
 import { GetUserProfile } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { addSelectUSer } from '../../redux/userSlice';
 
 function Search() {
 
+    const dispatch = useDispatch()
     const [user, setUser] = useState("")
     const data = GetUserProfile()
 
@@ -18,9 +21,11 @@ function Search() {
         }
     }
 
-    function hidevisible_chat() {
+    function hidevisible_chat(item) {
         document.getElementById("landing2").style.display = "block";
         document.getElementById("landing1").style.display = "none";
+        dispatch(addSelectUSer(item))
+        setUser("")
     }
 
     return (
@@ -48,8 +53,8 @@ function Search() {
 
                     {
                         user.map((item, key) => (
-                            <div onClick={hidevisible_chat} className='w-full overflow-hidden my-2 h-20 flex items-center justify-between hoverMessage px-6 border-b-2 border-neutral-800 hover:bg-zinc-700 hover:cursor-pointer'>
-                                <img className='w-14 rounded-full shadow-2xl shadow-neutral-900' src="https://pbs.twimg.com/profile_images/1476294398782672898/eBuhTSsJ_400x400.jpg" alt="landing" />
+                            <div key={key} onClick={() => hidevisible_chat(item)} className='w-full overflow-hidden my-2 h-20 flex items-center justify-between hoverMessage px-6 border-b-2 border-neutral-800 hover:bg-zinc-700 hover:cursor-pointer'>
+                                <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={item.photoURL} alt="user" />
                                 <div className='w-full flex flex-col justify-center ml-4'>
                                     <h1 className='text-base tracking-wider mb-1'>{item.name} <span className='text-xs'> </span></h1>
                                     <p className='text-sm tracking-wider text-neutral-400'>@{item.username}</p>
