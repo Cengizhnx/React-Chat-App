@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
-import { collection, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
@@ -127,6 +127,21 @@ export const userUpdate = async (name, phone, desc, downloadURL) => {
       timeStamp: serverTimestamp()
     });
     toast.success("Profile Updated")
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
+// User Delete
+
+export const userDelete = async (user) => {
+  try {
+    const storageRef = ref(storage, `images/users/${user.uid}`);
+
+    deleteObject(storageRef)
+
+    deleteDoc(doc(db, "users", user.username))
+
   } catch (error) {
     toast.error(error.message)
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { TextInput, Label, Button } from 'flowbite-react'
 import { GrUpdate } from "react-icons/gr";
 import { SiAboutdotme } from "react-icons/si";
@@ -113,7 +113,6 @@ function Profile({ data }) {
                                 id="name1"
                                 type="text"
                                 placeholder="Your Name"
-                                required={true}
                                 value={name}
                                 icon={HiUser}
                                 onChange={(e) => setName(e.target.value)}
@@ -150,7 +149,6 @@ function Profile({ data }) {
                             <TextInput
                                 id="description1"
                                 type="text"
-                                required={true}
                                 placeholder="Hi! I'm usign Chat App !"
                                 value={desc}
                                 icon={SiAboutdotme}
