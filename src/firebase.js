@@ -1,11 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
-import { collection, deleteDoc, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
 import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useSelector } from "react-redux";
 
 
 const firebaseConfig = {
@@ -21,6 +22,8 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app)
 export const storage = getStorage(app);
+
+
 
 
 // User Phone Register
@@ -96,7 +99,7 @@ export const getUserPhoto2 = () => {
 }
 
 
-const productConverter = {
+const userConverter = {
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options)
 
@@ -109,7 +112,14 @@ const productConverter = {
 }
 
 export const GetUserProfile = () => {
-  const [cart] = useCollectionData(collection(db, "users").withConverter(productConverter))
+  const [cart] = useCollectionData(collection(db, "users").withConverter(userConverter))
+  return cart;
+}
+
+export const GetUserBlocks = () => {
+  const activeUser = useSelector(state => state.users.user);
+
+  const [cart] = useCollectionData(collection(db, `users/${activeUser.displayName}/blocks`).withConverter(userConverter))
   return cart;
 }
 
@@ -132,7 +142,7 @@ export const userUpdate = async (name, phone, desc, downloadURL) => {
   }
 }
 
-// User Delete
+// User Account Delete
 
 export const userDelete = async (user) => {
   try {
@@ -142,6 +152,30 @@ export const userDelete = async (user) => {
 
     deleteDoc(doc(db, "users", user.username))
 
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
+// User Block
+
+export const userBlock = async (user) => {
+  try {
+    await addDoc(collection(db, "users", `${auth.currentUser.displayName}/blocks`), {
+      user: user,
+      timeStamp: serverTimestamp()
+    })
+    toast.success(`${user.username} blocked !`)
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
+export const userDeblock = async (item) => {
+  try {
+    console.log(item);
+    await deleteDoc(doc(db, "users", `${auth.currentUser.displayName}/blocks/${item.id}`))
+    toast.success(`${item.user.username} Deblocked !`)
   } catch (error) {
     toast.error(error.message)
   }

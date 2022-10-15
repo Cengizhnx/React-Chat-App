@@ -2,11 +2,23 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { BiBlock } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
+import { userBlock, userDeblock } from '../../../firebase';
+import { Toaster } from 'react-hot-toast';
 
-function Bio() {
+function Bio({ blocks }) {
     const selectUser = useSelector(state => state.users.selectUser)
 
     let result = selectUser?.phone_number?.substr(0, 3) + " " + selectUser?.phone_number?.substr(3, 3) + " " + selectUser?.phone_number?.substr(6, 3) + " " + selectUser?.phone_number?.substr(9, 2) + " " + selectUser?.phone_number?.substr(11, 2);
+
+    const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
+
+    const handleBlock = async () => {
+        await userBlock(selectUser)
+    }
+
+    const handleDeblock = async (item) => {
+        await userDeblock(item)
+    }
 
     return (
         <div style={{ backgroundColor: "#191a20" }} className='w-full flex flex-col items-center justify-center'>
@@ -20,12 +32,22 @@ function Bio() {
                 <p className='text-sm tracking-wider text-neutral-400 mt-1'>{selectUser.description}</p>
             </div>
             <div className='w-5/6 flex flex-col justify-center items-center my-6 px-8 py-4 border-y-2 rounded-2xl border-neutral-700'>
-                <div className='w-full h-8 flex flex-row justify-evenly items-center text-red-400 rounded-lg hover:bg-zinc-700 hover:cursor-pointer mb-5'>
-                    <div className='flex justify-center items-center'>
-                        <BiBlock className="h-6 w-6" />
+                {
+                    filtered?.length > 0 && <div onClick={() => handleDeblock(filtered[0])} className='w-full h-8 flex flex-row justify-evenly items-center text-red-400 rounded-lg hover:bg-zinc-700 hover:cursor-pointer mb-5'>
+                        <div className='flex justify-center items-center'>
+                            <BiBlock className="h-6 w-6" />
+                        </div>
+                        <p>@{selectUser.username} engeli kaldır</p>
                     </div>
-                    <p>@{selectUser.username} kişisini engelle</p>
-                </div>
+                }
+                {
+                    filtered?.length <= 0 && <div onClick={() => handleBlock()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-400 rounded-lg hover:bg-zinc-700 hover:cursor-pointer mb-5'>
+                        <div className='flex justify-center items-center'>
+                            <BiBlock className="h-6 w-6" />
+                        </div>
+                        <p>@{selectUser.username} kişisini engelle</p>
+                    </div>
+                }
                 <div className='w-full h-8 flex flex-row justify-evenly items-center text-red-400 rounded-lg hover:bg-zinc-700 hover:cursor-pointer'>
                     <div className='flex justify-center items-center'>
                         <FaTrash className="h-5 w-5" />
@@ -34,6 +56,7 @@ function Bio() {
                 </div>
 
             </div>
+            <Toaster position='top-right'></Toaster>
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { AiOutlineLogin, AiOutlineUserDelete } from "react-icons/ai";
+import { BiBlock } from "react-icons/bi";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, getUserPhoto2, userDelete, userLogout } from '../../firebase';
@@ -50,6 +51,11 @@ function Header({ data }) {
         document.getElementById("div_right").style.display = "block";
     }
 
+    function hidevisible_block() {
+        document.getElementById("div_left").style.display = "none";
+        document.getElementById("div_block").style.display = "block";
+    }
+
 
     useEffect(() => {
         if (!status) {
@@ -69,6 +75,13 @@ function Header({ data }) {
                         arrowIcon={true}
                         inline={true}
                     >
+
+                        <Link onClick={hidevisible_block} className="w-full">
+                            <Dropdown.Item>
+                                <BiBlock className="h-6 w-6 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                                Block List
+                            </Dropdown.Item>
+                        </Link>
 
                         <Link onClick={handleDeleteUser} className="w-full">
                             <Dropdown.Item>
