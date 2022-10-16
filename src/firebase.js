@@ -123,6 +123,13 @@ export const GetUserBlocks = () => {
   return cart;
 }
 
+export const GetUserFriends = () => {
+  const activeUser = useSelector(state => state.users.user);
+
+  const [cart] = useCollectionData(collection(db, `users/${activeUser.displayName}/friends`).withConverter(userConverter))
+  return cart;
+}
+
 // User Update
 
 export const userUpdate = async (name, phone, desc, downloadURL) => {
@@ -171,6 +178,8 @@ export const userBlock = async (user) => {
   }
 }
 
+// User Deblock
+
 export const userDeblock = async (item) => {
   try {
     console.log(item);
@@ -180,3 +189,28 @@ export const userDeblock = async (item) => {
     toast.error(error.message)
   }
 }
+
+// User Add Friends
+
+export const userAddFriends = async (user) => {
+  try {
+    await addDoc(collection(db, "users", `${auth.currentUser.displayName}/friends`), {
+      user: user,
+      timeStamp: serverTimestamp()
+    })
+    toast.success(`${user.username} add friends !`)
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
+export const userDeleteFriends = async (item) => {
+  try {
+    console.log(item);
+    await deleteDoc(doc(db, "users", `${auth.currentUser.displayName}/friends/${item.id}`))
+    toast.success(`${item.user.username} delete friends !`)
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+

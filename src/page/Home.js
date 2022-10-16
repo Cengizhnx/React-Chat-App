@@ -6,10 +6,11 @@ import LandingPage from '../components/Chat/LandingPage'
 import { useSelector } from 'react-redux'
 import Loading from '../components/Loading'
 import { useNavigate } from 'react-router-dom'
-import { GetUserBlocks, GetUserProfile } from '../firebase'
+import { GetUserBlocks, GetUserFriends, GetUserProfile } from '../firebase'
 import Profile from './Profile/Profile'
 import Index from '../components/Chat/Message/Index'
 import Block from './Block'
+import Friends from './Friends'
 
 function Home() {
 
@@ -17,6 +18,7 @@ function Home() {
     console.log(user);
     const data = GetUserProfile()
     const blocks = GetUserBlocks()
+    const friends = GetUserFriends()
     const status = useSelector(state => state.users.status)
     const navigate = useNavigate()
 
@@ -35,7 +37,7 @@ function Home() {
                 !data && <div style={{ backgroundColor: "#26262c" }} className="w-full h-screen flex justify-center items-center"> <Loading></Loading> </div>
             }
             {
-                user && data && blocks && <div style={{ backgroundColor: "#26262c" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
+                user && data && blocks && friends && <div style={{ backgroundColor: "#26262c" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
                     <div style={{ backgroundColor: "#191a20" }} id='div_left' className="text-white sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
                         <Header data={data}></Header>
                         <Search></Search>
@@ -48,6 +50,9 @@ function Home() {
                     <div style={{ backgroundColor: "#191a20", display: "none" }} id='div_block' className="text-white xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
                         <Block blocks={blocks}></Block>
                     </div>
+                    <div style={{ backgroundColor: "#191a20", display: "none" }} id='div_friends' className="text-white xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
+                        <Friends friends={friends}></Friends>
+                    </div>
                     <div id='landing1' className="divHidden w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl shadow-2xl">
                         <LandingPage></LandingPage>
                     </div>
@@ -57,7 +62,7 @@ function Home() {
                 </div>
             }
 
-        </div>
+        </div >
 
 
     )

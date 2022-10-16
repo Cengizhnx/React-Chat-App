@@ -4,10 +4,12 @@ import Bio from '../Bio/Bio';
 import Chat from "./Chat";
 import Header from "./Header";
 import Message from "./Message";
-import { GetUserBlocks } from '../../../firebase';
+import { GetUserBlocks, GetUserFriends } from '../../../firebase';
 
 function Index() {
     const blocks = GetUserBlocks()
+    const friends = GetUserFriends()
+
 
     return (
         <div className='w-full h-full flex flex-row'>
@@ -19,7 +21,7 @@ function Index() {
             </div>
             <div style={{ display: "none" }} className='w-2/3 h-full flex flex-col rounded-r-xl ' id="bio">
                 <BioHeader></BioHeader>
-                <Bio blocks={blocks}></Bio>
+                <Bio blocks={blocks} friends={friends}></Bio>
 
             </div>
         </div>
