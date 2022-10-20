@@ -12,14 +12,14 @@ function Header() {
   }
 
   return (
-    <div style={{ backgroundColor: "#323237" }} onClick={() => hidevisible_chat()} id="chat_header" className='w-full h-20 rounded-tr-xl flex items-center cursor-pointer border-b-2 border-stone-700'>
+    <div onClick={() => hidevisible_chat()} id="chat_header" className='w-full h-20 bg-bgLight2 dark:bg-bgDark2 rounded-tr-xl flex items-center cursor-pointer border-b-2 border-gray-300 dark:border-chatBorder'>
       <div className='w-full px-5 flex flex-row items-center justify-start' >
         <button>
-          <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' src={selectUser.photoURL} alt="" />
+          <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' src={selectUser.photoURL ? selectUser.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" />
         </button>
         <div className='ml-5 flex flex-col'>
-          <h1 className='text-base tracking-wider'>{selectUser.name}</h1>
-          <p className='text-xs tracking-wide text-slate-400'>{selectUser.description}</p>
+          <h1 className='text-base text-black dark:text-white tracking-wider'>{selectUser.name}</h1>
+          <p className='text-xs tracking-wide text-phoneNumber'>{selectUser.description}</p>
         </div>
       </div>
 

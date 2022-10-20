@@ -4,6 +4,7 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
     'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
   ],
+  darkMode: "class",
   theme: {
     screens: {
       'xs': '300px',
@@ -22,6 +23,21 @@ module.exports = {
 
       '2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
+    },
+    colors: {
+      'bgDark0': '#26262c',
+      'bgDark1': '#191a20',
+      'bgDark2': '#323237',
+      'bgDarkInput': '#4c4a55',
+      "messageHover": "#3f3f46",
+      "messageListBorder": "#262626",
+      "chatBorder": "#44403c",
+      "chatHeader": "#94a3b8",
+      "bioBorder": "#404040",
+      "phoneNumber": "#a3a3a3",
+      "bgLight1": "#fafafa",
+      "bgLight2": "#e4e4e7",
+      "messageHoverLight": "#dfdfe2",
     },
     extend: {},
   },

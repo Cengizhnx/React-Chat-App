@@ -24,11 +24,9 @@ export const db = getFirestore(app)
 export const storage = getStorage(app);
 
 
-
-
 // User Phone Register
 
-export const userRegister = async (value, username) => {
+export const userRegister = async (value, username, downloadURL) => {
   try {
     await updateProfile(auth.currentUser, {
       displayName: username,
@@ -39,6 +37,7 @@ export const userRegister = async (value, username) => {
       username: username,
       phone_number: value,
       description: "",
+      photoURL: downloadURL,
       uid: auth.currentUser.uid,
       timeStamp: serverTimestamp()
     });

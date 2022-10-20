@@ -6,10 +6,11 @@ import { AiOutlineLogin } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { auth, db, getUserPhoto, setUpRecaptcha, storage, userRegister } from '../../firebase';
+import { auth, db, GetUserProfile, setUpRecaptcha, storage, userRegister, userUpdate } from '../../firebase';
 import toast, { Toaster } from 'react-hot-toast';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 
 function Register() {
 
@@ -17,11 +18,18 @@ function Register() {
 
     const [value, setValue] = useState("")
     const [username, setUsername] = useState("")
+    const [number, setNumber] = useState("")
     const [otp, setOtp] = useState("")
     const [flag, setFlag] = useState(false)
     const [visible, setVisible] = useState(false)
     const [confirmObj, setConfirmObj] = useState("")
     const [image, setImage] = useState(null)
+    const data = GetUserProfile()
+
+    const phoneNumberSearch = () => {
+        const key = data.filter(item => item.phone_number === value)
+        setNumber(key);
+    }
 
     const usernameSearch = async () => {
         try {
@@ -48,9 +56,15 @@ function Register() {
         }
         else {
             try {
-                const res = await setUpRecaptcha(value);
-                setConfirmObj(res)
-                setFlag(true)
+                if (number.length > 0) {
+                    toast.error("Phone Number already exists !")
+                }
+                else {
+                    const res = await setUpRecaptcha(value);
+                    setConfirmObj(res)
+                    setFlag(true)
+                }
+
             } catch (error) {
                 toast.error(error.message)
             }
@@ -66,11 +80,14 @@ function Register() {
         try {
             const res = await confirmObj.confirm(otp);
             if (res) {
-                await userRegister(value, username)
-                uploadImage()
+
+                await updatePhoto()
+
                 navigate('/', {
                     replace: true
                 })
+                // uploadImage()
+
             }
 
         } catch (error) {
@@ -79,19 +96,48 @@ function Register() {
 
     }
 
-    const uploadImage = () => {
-        if (image == null) {
-            const url = getUserPhoto()
-            setImage(url)
+    const updatePhoto = async () => {
+        const file = image;
+        const storageRef = ref(storage, `images/users/${auth.currentUser.uid}`);
+
+        if (file === null || file === undefined) {
+            await userUpdate(auth.currentUser.photoURL)
         }
         else {
-            const imageRef = ref(storage, `images/users/${auth.currentUser.uid}`)
-            uploadBytes(imageRef, image).then(() => {
-                toast.success("Image added")
+            await uploadBytesResumable(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(async (downloadURL) => {
+                    try {
+                        await userRegister(value, username, downloadURL)
+                        
+                        await updateProfile(auth.currentUser, {
+                            photoURL: downloadURL,
+                        });
+
+                    } catch (err) {
+                        console.log(err);
+                    }
+                    finally {
+                        
+                    }
+                });
             });
         }
 
     }
+
+    // const uploadImage = () => {
+    //     if (image == null) {
+    //         const url = getUserPhoto()
+    //         setImage(url)
+    //     }
+    //     else {
+    //         const imageRef = ref(storage, `images/users/${auth.currentUser.uid}`)
+    //         uploadBytes(imageRef, image).then(() => {
+    //             toast.success("Image added")
+    //         });
+    //     }
+
+    // }
 
     const handleConvert = (e) => {
 
@@ -133,7 +179,7 @@ function Register() {
                             <div className='flex justify-center items-center my-5'>
                                 <Button onClick={usernameSearch} color="light" type="submit">
                                     <HiSearch className="mr-2 h-5 w-5" />
-                                    Check
+                                    Check it
                                 </Button>
                             </div>
                         </div>
@@ -167,7 +213,7 @@ function Register() {
                         </div>
 
                         <div className='flex justify-center items-center my-5'>
-                            <Button color="light" type="submit">
+                            <Button onClick={phoneNumberSearch} color="light" type="submit">
                                 <VscCheckAll className="mr-2 h-5 w-5" />
                                 Register
                             </Button>

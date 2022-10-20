@@ -8,6 +8,7 @@ import { auth, getUserPhoto2, userDelete, userLogout } from '../../firebase';
 import { logout } from '../../redux/userSlice';
 import { Dropdown } from "flowbite-react";
 import { deleteUser } from 'firebase/auth';
+import Theme from "../Theme";
 
 function Header({ data }) {
 
@@ -63,19 +64,19 @@ function Header({ data }) {
     }
 
 
-    useEffect(() => {
-        if (!status) {
-            getUserPhoto2()
-        }
-    }, [status, user])
+    // useEffect(() => {
+    //     if (!status) {
+    //         getUserPhoto2()
+    //     }
+    // }, [status, user])
 
     return (
-        <div style={{ backgroundColor: "#323237" }} className='w-full h-16 mb-1 rounded-tl-xl flex items-center'>
+        <div className='w-full h-16 mb-1 rounded-tl-xl flex items-center dark:text-white bg-bgLight2 dark:bg-bgDark2'>
             <div className='w-full px-5 flex flex-row items-center justify-between' >
                 <button onClick={hidevisible_menu}>
-                    <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' id='myimg2' alt="" />
+                    <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' src={user?.photoURL ? user?.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" />
                 </button>
-                <h1 className='text-base tracking-wider'>@{user.username}</h1>
+                <h1 className='text-base tracking-wider'>@{auth.currentUser.displayName}</h1>
                 <div className='flex flex-row items-center z-10'>
                     <Dropdown
                         arrowIcon={true}
@@ -94,6 +95,16 @@ function Header({ data }) {
                                 Block List
                             </Dropdown.Item>
                         </Link>
+
+                        <Dropdown.Divider />
+
+                        <Link className="w-full">
+                            <Dropdown.Item>
+                                <Theme></Theme>
+                            </Dropdown.Item>
+                        </Link>
+
+                        <Dropdown.Divider />
 
                         <Link onClick={handleDeleteUser} className="w-full">
                             <Dropdown.Item>

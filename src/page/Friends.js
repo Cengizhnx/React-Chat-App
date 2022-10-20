@@ -12,9 +12,9 @@ function Friends({ friends }) {
 
     return (
         <div className='w-full h-full flex flex-col items-center justify-start'>
-            <div className='w-full h-20 px-5 flex flex-row items-center justify-start border-b-2 border-neutral-800'>
+            <div className='w-full h-16 p-5 flex flex-row items-center justify-start text-black dark:text-white bg-bgLight2 dark:bg-bgDark2 rounded-tl-xl'>
                 <button onClick={hidevisible_home}>
-                    <HiChevronDoubleLeft className="h-5 w-5 mr-3 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                    <HiChevronDoubleLeft className="h-5 w-5 mr-3 text-black hover:bg-messageHover hover:text-white dark:text-white dark:hover:bg-bgLight2 dark:hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                 </button>
                 <h1>New Chat</h1>
             </div>

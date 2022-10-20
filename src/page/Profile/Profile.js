@@ -22,9 +22,9 @@ function Profile({ data }) {
     const user = data.find(item => item.uid === auth.currentUser.uid)
 
     const [image, setImage] = useState(null)
-    const [name, setName] = useState(user.name)
-    const [phone, setPhone] = useState(user.phone_number)
-    const [desc, setDesc] = useState(user.description)
+    const [name, setName] = useState(user?.name)
+    const [phone, setPhone] = useState(user?.phone_number)
+    const [desc, setDesc] = useState(user?.description)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -90,12 +90,12 @@ function Profile({ data }) {
             {
                 user && !status && <div className='flex flex-col items-center h-full justify-center '>
                     <button onClick={hidevisible_home}>
-                        <HiChevronDoubleLeft className="absolute m-4 h-5 w-5 top-5 left-5 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                        <HiChevronDoubleLeft className="absolute m-4 h-5 w-5 top-5 left-5 text-black hover:bg-messageHover hover:text-white dark:text-white dark:hover:bg-bgLight2 dark:hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                     </button>
 
                     <form onSubmit={handleSubmit} className="flex flex-col w-3/4">
                         <div className='flex flex-col items-center justify-center my-8'>
-                            <img className='w-36 h-36 object-cover rounded-full shadow-2xl shadow-neutral-900' src={user.photoURL} id='myimg' alt="" />
+                            <img className='w-44 h-44 object-cover rounded-full shadow-xl shadow-gray-400 dark:shadow-bgDark1' src={user?.photoURL ? user?.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} id='myimg' alt="" />
                             <label className="mt-5 block">
                                 <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>
@@ -104,7 +104,6 @@ function Profile({ data }) {
                         <div>
                             <div className="mb-2 block">
                                 <Label
-                                    style={{ color: "white" }}
                                     htmlFor="name1"
                                     value="Your Name"
                                 />
@@ -121,7 +120,6 @@ function Profile({ data }) {
                         <div className='mt-5'>
                             <div className="mb-2 block">
                                 <Label
-                                    style={{ color: "white" }}
                                     htmlFor="phone1"
                                     value="Your Phone Number"
                                 />
@@ -141,7 +139,6 @@ function Profile({ data }) {
                         <div className='mt-5'>
                             <div className="mb-2 block">
                                 <Label
-                                    style={{ color: "white" }}
                                     htmlFor="phone1"
                                     value="About Me"
                                 />

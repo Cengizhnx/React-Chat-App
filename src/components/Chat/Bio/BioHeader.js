@@ -12,9 +12,9 @@ function BioHeader() {
   }
 
   return (
-    <div style={{ backgroundColor: "#323237" }} className='w-full h-16 rounded-tr-xl flex p-5 items-center'>
+    <div className='w-full h-16 bg-bgLight2 dark:bg-bgDark2 rounded-tr-xl flex p-5 items-center'>
       <Link onClick={hidevisible_chat} >
-        <VscChromeClose className="h-5 w-5 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+        <VscChromeClose className="h-5 w-5 text-black hover:bg-messageHover hover:text-white dark:text-white dark:hover:bg-bgLight2 dark:hover:text-black hover:rounded-2xl hover:cursor-pointer" />
       </Link>
     </div>
   )

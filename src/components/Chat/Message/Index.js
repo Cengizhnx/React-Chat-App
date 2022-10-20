@@ -19,7 +19,7 @@ function Index() {
                 <Message></Message>
 
             </div>
-            <div style={{ display: "none" }} className='w-2/3 h-full flex flex-col rounded-r-xl ' id="bio">
+            <div style={{ display: "none" }} className='w-2/3 h-full flex flex-col rounded-r-xl shadow-xl' id="bio">
                 <BioHeader></BioHeader>
                 <Bio blocks={blocks} friends={friends}></Bio>
 

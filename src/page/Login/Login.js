@@ -6,7 +6,7 @@ import { VscCheckAll } from "react-icons/vsc";
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { setUpRecaptcha } from '../../firebase';
+import { GetUserProfile, setUpRecaptcha } from '../../firebase';
 import toast, { Toaster } from 'react-hot-toast';
 
 function Login() {
@@ -17,17 +17,31 @@ function Login() {
   const [otp, setOtp] = useState("")
   const [flag, setFlag] = useState(false)
   const [confirmObj, setConfirmObj] = useState("")
+  const [number, setNumber] = useState("")
+  const data = GetUserProfile()
+
+  const phoneNumberSearch = () => {
+    const key = data.filter(item => item.phone_number === value)
+    setNumber(key);
+  }
 
   const getOTP = async (e) => {
     e.preventDefault()
+
     if (value === "" || value === undefined) {
       toast.error("Please fill out this field !")
     }
     else {
       try {
-        const res = await setUpRecaptcha(value);
-        setConfirmObj(res)
-        setFlag(true)
+        if (number.length === 0) {
+          toast.error("Phone Number not registered !")
+        }
+        else {
+          const res = await setUpRecaptcha(value);
+          setConfirmObj(res)
+          setFlag(true)
+        }
+
       } catch (error) {
         toast.error(error.message)
       }
@@ -83,7 +97,7 @@ function Login() {
             </div>
 
             <div className='flex justify-center items-center mb-8'>
-              <Button color="light" type="submit">
+              <Button onClick={phoneNumberSearch} color="light" type="submit">
                 <HiOutlineArrowRight className="mr-2 h-5 w-5" />
                 Login
               </Button>
