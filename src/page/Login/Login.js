@@ -8,11 +8,12 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { GetUserProfile, setUpRecaptcha } from '../../firebase';
 import toast, { Toaster } from 'react-hot-toast';
+import DarkMode from '../../components/DarkMode';
 
 function Login() {
 
   const navigate = useNavigate()
-
+  DarkMode()
   const [value, setValue] = useState("")
   const [otp, setOtp] = useState("")
   const [flag, setFlag] = useState(false)
@@ -66,11 +67,11 @@ function Login() {
   }
 
   return (
-    <div style={{ backgroundColor: "#191a20" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
-      <div style={{ backgroundColor: "#323237" }} className='xs:w-full md:w-2/3 lg:w-1/3 xs:h-full md:h-2/3 flex flex-col rounded-2xl justify-center'>
+    <div className="bg-bgLight2 dark:bg-bgDark0 w-full flex flex-row items-center p-4 justify-center h-screen">
+      <div className='bg-bgLight1 dark:bg-bgDark2 xs:w-full md:w-2/3 lg:w-1/3 xs:h-full md:h-2/3 flex flex-col rounded-2xl justify-center'>
         <div className='p-12'>
           <div className='flex items-center justify-center mb-14'>
-            <span className="text-4xl before:block before:absolute before:-inset-3 before:-skew-y-3 before:bg-zinc-600 relative inline-block">
+            <span className="text-4xl before:block before:absolute before:-inset-3 before:-skew-y-3 before:bg-loginTextBgLight dark:before:bg-loginTextBg relative inline-block">
               <span className="relative text-white tracking-wide">LOGIN</span>
             </span>
           </div>
@@ -79,12 +80,11 @@ function Login() {
             <div>
               <div className="mb-2 block">
                 <Label
-                  style={{ color: "white" }}
                   htmlFor="email1"
                   value="Your Phone Number"
                 />
               </div>
-              <div className='bg-white rounded-xl py-1 px-4'>
+              <div className='bg-bgLight2 dark:bg-white rounded-xl py-1 px-4'>
                 <PhoneInput
                   international
                   defaultCountry="TR"
@@ -133,10 +133,10 @@ function Login() {
           </form>
 
           <div className='flex items-center justify-center'>
-            <p className='text-zinc-400'>
+            <p className='text-loginInfo'>
               Don't have an account ?
               <Link to="/register">
-                <span className='ml-2 text-white hover:underline'>Register</span>
+                <span className='ml-2 text-black dark:text-white hover:underline'>Register</span>
               </Link>
             </p>
           </div>

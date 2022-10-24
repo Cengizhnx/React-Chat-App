@@ -5,7 +5,7 @@ import DarkMode from './DarkMode';
 function Theme() {
     const [colorTheme, setTheme] = DarkMode();
     return (
-        <div onClick={()=> setTheme(colorTheme)}>
+        <div className='w-full' onClick={()=> setTheme(colorTheme)}>
             {
                 colorTheme === "light" ?
                     (
