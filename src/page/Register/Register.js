@@ -11,10 +11,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
+import DarkMode from '../../components/DarkMode';
 
 function Register() {
 
     const navigate = useNavigate()
+    DarkMode()
 
     const [value, setValue] = useState("")
     const [username, setUsername] = useState("")
@@ -155,15 +157,15 @@ function Register() {
     }
 
     return (
-        <div style={{ backgroundColor: "#191a20" }} className="w-full flex flex-row items-center p-4 justify-center h-screen">
-            <div style={{ backgroundColor: "#323237" }} className='relative xs:w-full xs:justify-center md:w-4/6 lg:w-3/4 xl:w-1/3 xs:h-full md:h-5/6 flex flex-col rounded-2xl'>
+        <div className="bg-bgLight2 dark:bg-bgDark1 w-full flex flex-row items-center p-4 justify-center h-screen">
+            <div className='bg-bgLight1 dark:bg-bgDark2  relative xs:w-full xs:justify-center md:w-4/6 lg:w-3/4 xl:w-1/3 xs:h-full md:h-5/6 flex flex-col rounded-2xl'>
                 <Link to="/login">
-                    <AiOutlineLogin className="absolute m-4 h-6 w-6 top-1 left-0 text-white hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                    <AiOutlineLogin className="absolute m-4 h-6 w-6 top-1 left-0 text-black hover:bg-loginTextBgLight hover:text-white dark:text-white dark:hover:bg-bgLight2 dark:hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                 </Link>
                 <div className='p-8 mt-10'>
 
                     <div className='w-full flex xs:flex-col items-center justify-center' >
-                        <span className="text-4xl shadow-2xl shadow-stone-900 before:block before:absolute xs:before:-inset-1 sm:before:-inset-3 before:-skew-y-3 before:bg-zinc-600 relative inline-block">
+                        <span className="text-4xl shadow-2xl shadow-stone-900 before:block before:absolute xs:before:-inset-1 sm:before:-inset-3 before:-skew-y-3 before:bg-loginTextBgLight dark:before:bg-loginTextBg relative inline-block">
                             <span className="xs:text-base sm:text-3xl md:text-4xl relative text-white tracking-wide">REGISTER</span>
                         </span>
                         <div className='w-full mt-10 flex flex-col items-center' style={{ display: !visible ? "block" : "none" }}>
@@ -186,7 +188,7 @@ function Register() {
                         <div className='w-6/12 mt-10 flex flex-col items-center' style={{ display: visible ? "block" : "none" }}>
                             <img className='w-28 h-28 m-auto object-cover rounded-full shadow-xl shadow-neutral-900' id='myimg' src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt="landing" />
                             <label className="mt-5 block">
-                                <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs text-zinc-400 rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
+                                <input type="file" onChange={(e) => { handleConvert(e) }} className="block w-full text-xs tracking-wide text-zinc-400 dark:text-loginInfo rounded-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-white hover:file:bg-violet-100" />
                             </label>
                         </div>
                     </div>
@@ -195,12 +197,11 @@ function Register() {
                         <div>
                             <div className="mb-2 block">
                                 <Label
-                                    style={{ color: "white" }}
                                     htmlFor="email1"
                                     value="Your Phone Number"
                                 />
                             </div>
-                            <div className='bg-white rounded-xl py-1 px-4'>
+                            <div className='bg-bgLight2 dark:bg-white rounded-xl py-1 px-4'>
                                 <PhoneInput
                                     international
                                     defaultCountry="TR"
@@ -225,7 +226,6 @@ function Register() {
                         <div>
                             <div className="mb-2 block">
                                 <Label
-                                    style={{ color: "white" }}
                                     htmlFor="password1"
                                     value="Your OTP"
                                 />

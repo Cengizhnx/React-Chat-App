@@ -1,4 +1,3 @@
-import { TextInput } from 'flowbite-react'
 import { useState } from 'react';
 import { HiOutlineSearch } from "react-icons/hi";
 import { GetUserProfile } from '../../firebase';
@@ -27,8 +26,6 @@ function Search() {
         dispatch(addSelectUSer(item))
         setUser("")
     }
-
-    const theme = localStorage.getItem("theme")
 
     return (
         <div className='w-full flex flex-col items-center justify-center my-2'>

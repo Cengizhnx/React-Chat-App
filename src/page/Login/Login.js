@@ -67,7 +67,7 @@ function Login() {
   }
 
   return (
-    <div className="bg-bgLight2 dark:bg-bgDark0 w-full flex flex-row items-center p-4 justify-center h-screen">
+    <div className="bg-bgLight2 dark:bg-bgDark1 w-full flex flex-row items-center p-4 justify-center h-screen">
       <div className='bg-bgLight1 dark:bg-bgDark2 xs:w-full md:w-2/3 lg:w-1/3 xs:h-full md:h-2/3 flex flex-col rounded-2xl justify-center'>
         <div className='p-12'>
           <div className='flex items-center justify-center mb-14'>
@@ -109,7 +109,6 @@ function Login() {
             <div className='my-20'>
               <div className="mb-3 block">
                 <Label
-                  style={{ color: "white" }}
                   htmlFor="password1"
                   value="Your OTP"
                 />
