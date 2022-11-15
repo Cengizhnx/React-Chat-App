@@ -38,11 +38,11 @@ function Bio({ blocks, friends }) {
                 <h1 className='text-2xl text-black dark:text-white tracking-wide mt-5'>
                     {selectUser.name}
                 </h1>
-                <p className='text-sm tracking-wider text-phoneNumber mt-2'>{result}</p>
+                <p className='text-sm tracking-wider text-loginTextBg dark:text-phoneNumber mt-2'>{result}</p>
             </div>
             <div className='w-5/6 h-20 flex flex-col justify-center px-8 border-y-2 rounded-2xl border-bgLight2 dark:border-bioBorder'>
                 <h1 className='text-base text-black dark:text-white tracking-wide'>About Me</h1>
-                <p className='text-sm tracking-wider text-phoneNumber mt-1'>{selectUser.description}</p>
+                <p className='text-sm tracking-wider text-loginTextBg dark:text-phoneNumber mt-1'>{selectUser.description}</p>
             </div>
 
             <div className='w-5/6 flex flex-col justify-center items-center px-8 py-4 my-4 border-y-2 rounded-2xl border-bgLight2 dark:border-bioBorder'>

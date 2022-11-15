@@ -6,6 +6,8 @@ export const userSlice = createSlice({
         user: false,
         status: true,
         selectUser: false,
+        chatId: false,
+        chats: false,
     },
     reducers: {
         login: (state, action) => {
@@ -18,10 +20,16 @@ export const userSlice = createSlice({
         },
         addSelectUSer: (state, action) => {
             state.selectUser = action.payload;
+        },
+        chatID: (state, action) => {
+            state.chatId = action.payload;
+        },
+        chats: (state, action) => {
+            state.chats = action.payload;
         }
     }
 })
 
-export const { login, logout, addSelectUSer } = userSlice.actions;
+export const { login, logout, addSelectUSer, chatID, chats } = userSlice.actions;
 
 export default userSlice.reducer;

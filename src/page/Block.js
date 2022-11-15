@@ -34,7 +34,7 @@ function Block({ blocks }) {
                 blocks.length > 0 &&
                 <div className='w-full h-full justify-center items-center overflow-y-auto mt-16'>
                     {
-                        blocks.map((item, key) => (
+                        blocks.sort((a, b) => a.user.username > b.user.username ? 1 : -1).map((item, key) => (
 
                             <div key={key} className='w-full overflow-hidden h-20 flex items-center mb-2 justify-between hoverMessage px-6 border-b-2 border-bgLight2 dark:border-messageListBorder'>
                                 {

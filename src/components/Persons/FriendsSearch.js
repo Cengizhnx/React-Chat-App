@@ -1,13 +1,15 @@
 import { TextInput } from 'flowbite-react'
 import { useState } from 'react';
 import { HiOutlineSearch } from "react-icons/hi";
-import { useDispatch } from 'react-redux';
-import { addSelectUSer } from '../../redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { auth } from '../../firebase';
+import { addSelectUSer, chatID } from '../../redux/userSlice';
 
 function FriendsSearch({ friends }) {
 
     const dispatch = useDispatch()
     const [user, setUser] = useState("")
+    const chats = useSelector(state => state.users.chats)
 
     const getUser = (e) => {
         const filtered = friends.filter((item) => item.user.username.toLowerCase().includes(e.toLowerCase()))
@@ -25,6 +27,10 @@ function FriendsSearch({ friends }) {
         document.getElementById("landing2").style.display = "block";
         document.getElementById("landing1").style.display = "none";
         dispatch(addSelectUSer(item))
+
+        const cid = auth.currentUser.uid + item.uid
+        dispatch(chatID(cid))
+
         setUser("")
     }
 
@@ -36,7 +42,6 @@ function FriendsSearch({ friends }) {
                     style={{ border: "none", fontSize: "13.5px", letterSpacing: "0.3px", paddingLeft: "45px" }}
                     type="text"
                     placeholder="Call or start a new chat"
-                    icon={HiOutlineSearch}
                     onChange={(e) => getUser(e.target.value)}
                 />
                 <HiOutlineSearch className="h-5 w-5 mx-3 absolute text-phoneNumber" />

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { HiOutlineSearch } from "react-icons/hi";
-import { GetUserProfile } from '../../firebase';
-import { useDispatch } from 'react-redux';
-import { addSelectUSer } from '../../redux/userSlice';
+import { auth, db, GetUserProfile } from '../../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSelectUSer, chatID } from '../../redux/userSlice';
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
 function Search() {
 
@@ -10,6 +11,9 @@ function Search() {
     const [user, setUser] = useState("")
     const data = GetUserProfile()
 
+    const chats = useSelector(state => state.users.chats)
+
+    // User Search
     const getUser = (e) => {
         const filtered = data.filter((item) => item.username.toLowerCase().includes(e.toLowerCase()))
         if (e.length > 0) {
@@ -20,11 +24,46 @@ function Search() {
         }
     }
 
+    const handlSelect = async (item) => {
+
+        const combineId =
+            auth.currentUser.uid > item.uid
+                ? auth.currentUser.uid + item.uid
+                : item.uid + auth.currentUser.uid;
+        try {
+
+            const res = await getDoc(doc(db, "chats", combineId))
+
+            if (!res.exists()) {
+                await setDoc(doc(db, "chats", combineId), { messages: [] })
+
+                await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
+                    [combineId + ".userInfo"]: {
+                        user: item,
+                    },
+                    [combineId + ".date"]: serverTimestamp()
+                })
+
+                await updateDoc(doc(db, "userChats", item.uid), {
+                    [combineId + ".userInfo"]: {
+                        user: auth.currentUser,
+                    },
+                    [combineId + ".date"]: serverTimestamp()
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     function hidevisible_chat(item) {
         document.getElementById("landing2").style.display = "block";
         document.getElementById("landing1").style.display = "none";
         dispatch(addSelectUSer(item))
         setUser("")
+        handlSelect(item)
+        const cid = auth.currentUser.uid + item.uid
+        dispatch(chatID(cid))
     }
 
     return (
@@ -35,7 +74,6 @@ function Search() {
                     style={{ border: "none", fontSize: "14px", letterSpacing: "0.3px", paddingLeft: "45px" }}
                     type="text"
                     placeholder="Call or start a new chat"
-                    icon={HiOutlineSearch}
                     onChange={(e) => getUser(e.target.value)}
                 />
                 <HiOutlineSearch className="h-5 w-5 mx-3 absolute text-phoneNumber" />

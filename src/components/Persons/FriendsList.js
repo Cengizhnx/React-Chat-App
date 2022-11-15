@@ -1,16 +1,23 @@
 import { Toaster } from 'react-hot-toast';
 import FriendsSearch from './FriendsSearch';
-import { useDispatch } from 'react-redux';
-import { addSelectUSer } from '../../redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSelectUSer, chatID } from '../../redux/userSlice';
+import { auth } from '../../firebase';
 
 function FriendsList({ friends }) {
 
     const dispatch = useDispatch()
 
+    const chats = useSelector(state => state.users.chats)
+    
     function hidevisible_chat(item) {
         document.getElementById("landing2").style.display = "block";
         document.getElementById("landing1").style.display = "none";
+
         dispatch(addSelectUSer(item))
+
+        const cid = auth.currentUser.uid + item.uid
+        dispatch(chatID(cid))
     }
 
     return (
@@ -29,7 +36,7 @@ function FriendsList({ friends }) {
                 <div className='w-full h-full justify-center items-center overflow-y-auto'>
                     <FriendsSearch friends={friends}></FriendsSearch>
                     {
-                        friends.map((item, key) => (
+                        friends.sort((a, b) => a.user.username > b.user.username ? 1 : -1).map((item, key) => (
 
                             <div key={key} onClick={() => hidevisible_chat(item.user)} className='w-full overflow-hidden h-20 flex items-center justify-between hoverMessage px-6 border-b-2 border-bgLight2 dark:border-messageListBorder hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer'>
                                 {

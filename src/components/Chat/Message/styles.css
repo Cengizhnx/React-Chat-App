@@ -1,0 +1,87 @@
+.message {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.messageInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.messageContent {
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.messageContent p {
+    background-color: white;
+    padding: 7.5px 15px;
+    border-radius: 0px 15px 15px 15px;
+    max-width: max-content;
+    text-align: justify;
+}
+
+.messageContent img {
+    width: 50%;
+}
+
+.owner {
+    flex-direction: row-reverse;
+}
+
+.owner .messageContent {
+    align-items: flex-end;
+}
+
+.owner p {
+    background-color: #323237;
+    color: white;
+    border-radius: 15px 0px 15px 15px;
+}
+
+/* ===== Scrollbar Dark CSS ===== */
+/* Firefox */
+.scrollbarDark {
+    scrollbar-width: thin;
+    scrollbar-color: #191a20 #323237;
+}
+
+/* Chrome, Edge, and Safari */
+.scrollbarDark::-webkit-scrollbar {
+    width: 7.5px;
+}
+
+.scrollbarDark::-webkit-scrollbar-track {
+    background: #323237;
+}
+
+.scrollbarDark::-webkit-scrollbar-thumb {
+    background-color: #191a20;
+    border-radius: 5px;
+    border: 0px solid #191a20;
+}
+
+/* ===== Scrollbar Lights CSS ===== */
+
+.scrollbarLight {
+    scrollbar-width: thin;
+    scrollbar-color: #4c4a55 #e4e4e7;
+}
+
+/* Chrome, Edge, and Safari */
+.scrollbarLight::-webkit-scrollbar {
+    width: 7.5px;
+}
+
+.scrollbarLight::-webkit-scrollbar-track {
+    background: #e4e4e7;
+}
+
+.scrollbarLight::-webkit-scrollbar-thumb {
+    background-color: #4c4a55;
+    border-radius: 5px;
+    border: 0px solid #4c4a55;
+}

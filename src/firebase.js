@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
-import { login, logout } from "./redux/userSlice";
+import { chats, login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
 import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -41,6 +41,11 @@ export const userRegister = async (value, username, downloadURL) => {
       uid: auth.currentUser.uid,
       timeStamp: serverTimestamp()
     });
+
+    await setDoc(doc(db, "userChats", auth.currentUser.uid), {
+      createdAt: serverTimestamp()
+    });
+
   } catch (error) {
     toast.error(error.message)
   }
@@ -203,11 +208,26 @@ export const userAddFriends = async (user) => {
   }
 }
 
+// User Delete Friends
+
 export const userDeleteFriends = async (item) => {
   try {
     console.log(item);
     await deleteDoc(doc(db, "users", `${auth.currentUser.displayName}/friends/${item.id}`))
     toast.success(`${item.user.username} delete friends !`)
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
+
+export const getChats = async () => {
+  try {
+    const response = await onSnapshot(doc(db, "userChats", auth.currentUser.uid), (doc) => {
+      return store.dispatch(chats(doc.data()));
+    })
+    return () => {
+      response();
+    }
   } catch (error) {
     toast.error(error.message)
   }
