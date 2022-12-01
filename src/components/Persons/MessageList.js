@@ -6,12 +6,14 @@ import { addSelectUSer, chatID } from '../../redux/userSlice';
 import moment from 'moment'
 import ChatMenu from './ChatMenu';
 
-
-function MessageList() {
+function MessageList({ blocks }) {
 
     const dispatch = useDispatch()
 
     const chats = useSelector(state => state.users.chats)
+    const selectUser = useSelector(state => state.users.selectUser)
+
+    const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
     function hidevisible_chat(item) {
         document.getElementById("landing2").style.display = "block";
@@ -39,9 +41,9 @@ function MessageList() {
                 chats &&
                 Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
                     <div onClick={() => hidevisible_chat(chat)} key={chat[0]} className='w-full h-20 flex items-center justify-between hoverMessage px-6 border-b-2 border-bgLight2 dark:border-messageListBorder hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer'>
-                        <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={chat[1].userInfo.user.photoURL} alt="landing" />
+                        <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={chat[1].userInfo?.user.photoURL} alt="landing" />
                         <div className='w-full flex flex-col justify-center ml-4'>
-                            <h1 className='text-base tracking-wider mb-1'>{chat[1].userInfo.user.name}</h1>
+                            <h1 className='text-base tracking-wider mb-1'>{chat[1].userInfo?.user.name}</h1>
                             <p className='text-sm tracking-wider text-phoneNumber'>{chat[1].lastMessage?.text}</p>
                         </div>
                         <div className='flex flex-col text-center w-10'>

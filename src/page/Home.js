@@ -43,7 +43,7 @@ function Home() {
                     <div id='div_left' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
                         <Header data={data}></Header>
                         <Search></Search>
-                        <MessageList></MessageList>
+                        <MessageList blocks={blocks}></MessageList>
 
                     </div>
                     <div style={{ display: "none" }} id='div_right' className=" dark:text-white bg-bgLight2 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">

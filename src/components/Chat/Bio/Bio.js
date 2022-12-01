@@ -3,10 +3,18 @@ import { useSelector } from 'react-redux'
 import { BiBlock } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import { MdOutlineAddReaction, MdOutlineMoodBad } from "react-icons/md";
-import { userAddFriends, userBlock, userDeblock, userDeleteFriends } from '../../../firebase';
+import { auth, db, userAddFriends, userBlock, userDeblock, userDeleteFriends } from '../../../firebase';
 import { Toaster } from 'react-hot-toast';
+import { deleteDoc, deleteField, doc, onSnapshot, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 function Bio({ blocks, friends }) {
+
+    const [block, setBlock] = useState(false)
+
+    const chatId = useSelector(state => state.users.chatId)
+
     const selectUser = useSelector(state => state.users.selectUser)
 
     let result = selectUser?.phone_number?.substr(0, 3) + " " + selectUser?.phone_number?.substr(3, 3) + " " + selectUser?.phone_number?.substr(6, 3) + " " + selectUser?.phone_number?.substr(9, 2) + " " + selectUser?.phone_number?.substr(11, 2);
@@ -15,12 +23,23 @@ function Bio({ blocks, friends }) {
 
     const friend = friends?.filter((item) => item.user.username === selectUser.username)
 
+    console.log(block);
+
     const handleBlock = async () => {
-        await userBlock(selectUser)
+        // await userBlock(selectUser)
+        await updateDoc(doc(db, "blocks", chatId), {
+            [auth.currentUser.uid]: true,
+            [selectUser.uid]: true,
+            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        })
     }
 
     const handleDeblock = async (item) => {
-        await userDeblock(item)
+        // await userDeblock(item)
+        await updateDoc(doc(db, "blocks", chatId), {
+            [auth.currentUser.uid]: false,
+            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        })
     }
 
     const handleAddFriends = async () => {
@@ -31,6 +50,63 @@ function Bio({ blocks, friends }) {
         await userDeleteFriends(item)
     }
 
+    function hidevisible_chat() {
+        document.getElementById("landing2").style.display = "none";
+        document.getElementById("landing1").style.display = "block";
+    }
+
+    useEffect(() => {
+        const getMessages = () => {
+
+            const response = onSnapshot(doc(db, "chats", chatId), (docx) => {
+                docx.exists()
+
+                if (docx.data()[auth.currentUser.uid] === true && docx.data()[selectUser.uid] === true) {
+                    deleteDoc(doc(db, "chats", chatId))
+                }
+
+            })
+            return () => {
+                response()
+            }
+        }
+
+        const getBlocks = () => {
+
+            const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
+                doc.exists() && setBlock(doc.data()[auth.currentUser.uid])
+            })
+            return () => {
+                response()
+            }
+        }
+
+        chatId && getMessages() && getBlocks()
+
+    }, [chatId, block])
+
+    const deleteChat = async () => {
+
+        if (window.confirm("Are you sure you want to delete the chat ?")) {
+
+            const chatRef0 = doc(db, "chats", chatId);
+
+            await updateDoc(chatRef0, {
+                [auth.currentUser.uid]: true,
+                [auth.currentUser.uid + "deletedDate"]: Timestamp.now()
+            });
+
+            hidevisible_chat()
+
+            const chatRef1 = doc(db, "userChats", auth.currentUser.uid);
+
+            await updateDoc(chatRef1, {
+                [chatId]: deleteField()
+            });
+
+        }
+
+    }
     return (
         <div className='dark:text-white bg-bgLight1 dark:bg-bgDark1 w-full flex flex-col items-center justify-center'>
             <div className='flex flex-col items-center justify-center my-6'>
@@ -68,7 +144,7 @@ function Bio({ blocks, friends }) {
 
             <div className='w-5/6 flex flex-col justify-center items-center px-8 py-4 border-y-2 rounded-2xl border-bgLight2 dark:border-bioBorder'>
                 {
-                    filtered?.length > 0 && <div onClick={() => handleDeblock(filtered[0])} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
+                    block === true && <div onClick={() => handleDeblock(filtered[0])} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
                         <div className='flex justify-center items-center'>
                             <BiBlock className="h-6 w-6" />
                         </div>
@@ -76,14 +152,14 @@ function Bio({ blocks, friends }) {
                     </div>
                 }
                 {
-                    filtered?.length <= 0 && <div onClick={() => handleBlock()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
+                    block === false && <div onClick={() => handleBlock()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
                         <div className='flex justify-center items-center'>
                             <BiBlock className="h-6 w-6" />
                         </div>
-                        <p>@{selectUser.username} kişisini engelle</p>
+                        <p>@{selectUser.username} block</p>
                     </div>
                 }
-                <div className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer'>
+                <div onClick={() => deleteChat()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer'>
                     <div className='flex justify-center items-center'>
                         <FaTrash className="h-5 w-5" />
                     </div>

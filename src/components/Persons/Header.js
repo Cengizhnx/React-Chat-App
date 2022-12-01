@@ -21,7 +21,7 @@ function Header({ data }) {
     const handleDeleteUser = async () => {
         if (window.confirm("Are you sure you want to delete the account ?")) {
 
-            deleteUser(auth.currentUser)
+            await deleteUser(auth.currentUser)
 
             await userLogout()
 

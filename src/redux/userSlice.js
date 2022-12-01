@@ -26,7 +26,7 @@ export const userSlice = createSlice({
         },
         chats: (state, action) => {
             state.chats = action.payload;
-        }
+        },
     }
 })
 

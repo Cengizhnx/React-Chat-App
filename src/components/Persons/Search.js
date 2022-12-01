@@ -11,8 +11,6 @@ function Search() {
     const [user, setUser] = useState("")
     const data = GetUserProfile()
 
-    const chats = useSelector(state => state.users.chats)
-
     // User Search
     const getUser = (e) => {
         const filtered = data.filter((item) => item.username.toLowerCase().includes(e.toLowerCase()))
@@ -31,24 +29,49 @@ function Search() {
                 ? auth.currentUser.uid + item.uid
                 : item.uid + auth.currentUser.uid;
         try {
+            dispatch(chatID(combineId))
 
             const res = await getDoc(doc(db, "chats", combineId))
+            const resBl = await getDoc(doc(db, "blocks", combineId))
+
+            const temp = auth.currentUser.uid
 
             if (!res.exists()) {
-                await setDoc(doc(db, "chats", combineId), { messages: [] })
-
-                await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
-                    [combineId + ".userInfo"]: {
-                        user: item,
-                    },
-                    [combineId + ".date"]: serverTimestamp()
+                await setDoc(doc(db, "chats", combineId), {
+                    messages: [],
+                    [temp + "deletedDate"]: true,
+                    [item.uid + "deletedDate"]: true,
                 })
 
-                await updateDoc(doc(db, "userChats", item.uid), {
-                    [combineId + ".userInfo"]: {
-                        user: auth.currentUser,
-                    },
-                    [combineId + ".date"]: serverTimestamp()
+                // await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
+                //     [combineId + ".userInfo"]: {
+                //         user: item,
+                //     },
+                //     [combineId + ".date"]: serverTimestamp()
+                // })
+
+                // await updateDoc(doc(db, "userChats", item.uid), {
+                //     [combineId + ".userInfo"]: {
+                //         user: {
+                //             description: auth.currentUser.displayName,
+                //             name: auth.currentUser.displayName,
+                //             photoURL: auth.currentUser.photoURL,
+                //             phone_number: auth.currentUser.phoneNumber,
+                //             timeStamp: serverTimestamp(),
+                //             uid: auth.currentUser.uid,
+                //             username: auth.currentUser.displayName,
+                //         }
+                //     },
+                //     [combineId + ".date"]: serverTimestamp()
+                // })
+
+            }
+            if (!resBl.exists()) {
+                await setDoc(doc(db, "blocks", combineId), {
+                        [auth.currentUser.uid]: false,
+                        [item.uid]: false,
+                        [auth.currentUser.uid + "blockedDate"]: true,
+                        [item.uid + "blockedDate"]: true,
                 })
             }
         } catch (error) {
@@ -62,8 +85,8 @@ function Search() {
         dispatch(addSelectUSer(item))
         setUser("")
         handlSelect(item)
-        const cid = auth.currentUser.uid + item.uid
-        dispatch(chatID(cid))
+        // const cid = auth.currentUser.uid + item.uid
+        // dispatch(chatID(cid))
     }
 
     return (

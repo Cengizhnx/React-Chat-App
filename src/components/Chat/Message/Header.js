@@ -12,7 +12,7 @@ function Header() {
   }
 
   return (
-    <div onClick={() => hidevisible_chat()} id="chat_header" className='w-full h-20 bg-bgLight2 dark:bg-bgDark2 rounded-tr-xl flex items-center cursor-pointer border-b-2 border-gray-300 dark:border-chatBorder'>
+    <div onClick={() => hidevisible_chat()} id="chat_header" className='w-full h-20 bg-bgLight2 dark:bg-bgDark2 rounded-tr-xl flex items-center cursor-pointer border-b-2 border-gray-300 dark:border-messageHover'>
       <div className='w-full px-5 flex flex-row items-center justify-start' >
         <button>
           <img className='w-10 h-10 object-cover rounded-full shadow-2xl shadow-neutral-900' src={selectUser.photoURL ? selectUser.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" />

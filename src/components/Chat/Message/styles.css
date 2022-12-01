@@ -24,10 +24,6 @@
     text-align: justify;
 }
 
-.messageContent img {
-    width: 50%;
-}
-
 .owner {
     flex-direction: row-reverse;
 }
@@ -51,7 +47,7 @@
 
 /* Chrome, Edge, and Safari */
 .scrollbarDark::-webkit-scrollbar {
-    width: 7.5px;
+    width: 6px;
 }
 
 .scrollbarDark::-webkit-scrollbar-track {
@@ -73,7 +69,7 @@
 
 /* Chrome, Edge, and Safari */
 .scrollbarLight::-webkit-scrollbar {
-    width: 7.5px;
+    width: 6px;
 }
 
 .scrollbarLight::-webkit-scrollbar-track {

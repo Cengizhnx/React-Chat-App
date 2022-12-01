@@ -1,67 +1,167 @@
 import { doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { db } from '../../../firebase'
+import { auth, db } from '../../../firebase'
 import SendMessage from './SendMessage'
+import chatLightBg from "../../../assets/chatBg1.jpg";
+import chatBgDark from "../../../assets/chatBgDark.jpg";
 import "./styles.css"
 
-
-function Chat() {
+function Chat({ blocks }) {
 
   const [messages, setMessages] = useState([])
-  const chatId = useSelector(state => state.users.chatId)
+  const [senderState, setSenderState] = useState(false)
+  const [deletedDate, setDeletedDate] = useState(false)
+  const [block, setBlock] = useState(false)
+  const [senderBlock, setSenderBlock] = useState(false)
+  const [blockedDate, setBlockedDate] = useState(false)
 
+
+  const chatId = useSelector(state => state.users.chatId)
+  const selectUser = useSelector(state => state.users.selectUser)
+
+  const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
   useEffect(() => {
     const getMessages = () => {
 
       const response = onSnapshot(doc(db, "chats", chatId), (doc) => {
-        doc.exists() && setMessages(doc.data().messages)
+        doc.exists() && setMessages(doc.data().messages) || setSenderState(doc.data()[auth.currentUser.uid]) || setDeletedDate(doc.data()[auth.currentUser.uid + "deletedDate"])
       })
       return () => {
         response()
       }
     }
 
-    chatId && getMessages()
+    const getBlocks = () => {
 
-  }, [chatId])
+      const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
+        doc.exists() && setBlock(doc.data()[auth.currentUser.uid]) || setSenderBlock(doc.data()[selectUser.uid]) || setBlockedDate(doc.data()[selectUser.uid + "blockedDate"])
+      })
+      return () => {
+        response()
+      }
+    }
+
+    chatId && getMessages() && getBlocks()
+
+  }, [chatId, block, senderBlock])
 
 
   return (
-    <div className='bg-bgLight2 dark:bg-bgDark2 text-black dark:text-white w-full h-full flex flex-col overflow-y-hidden justify-end'>
-      <div className='scrollbarLight dark:hidden overflow-y-auto pt-4 px-7'>
-        {messages.length > 5 &&
+    <div className='bg-bgLight2 dark:bg-bgDark2 text-black dark:text-white relative z-0 w-full h-full flex flex-col overflow-y-hidden justify-end'>
+      <div className='w-full h-full flex flex-col overflow-y-hidden justify-end dark:hidden' style={{ backgroundRepeat: "repeat", backgroundImage: `url(${chatLightBg})` }}>
+
+        <div className='scrollbarLight dark:hidden overflow-y-auto pt-4 px-7'>
+          {/* {senderState === false && messages.length > 10 &&
 
           <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
             <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
           </div>
 
-        }
+        } */}
 
-        {
-          messages.map(m => (
-            <SendMessage message={m} key={m.id}></SendMessage>
-          ))
-        }
-      </div>
+          {
+            senderBlock === true &&
+            <div className='flex items-center justify-center mb-72 w-1/2 m-auto rounded-2xl border-2 border-bg dark:border-bgDark1 dark:text-loginInfo'>
+              <p className='text-2xl'>
+                Blocked You
+              </p>
+            </div>
+          }
+          {
+            senderState === false && senderBlock === false && block === false && messages.map(m => (
+              deletedDate !== false
+                ? deletedDate < m.date
+                  ? <SendMessage message={m} key={m.id}></SendMessage>
+                  : ""
+                : ""))
+          }
+        </div>
 
-      <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
-        {messages.length > 5 &&
+        <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
+          {/* {senderState === false && messages.length > 10 &&
 
           <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
             <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
           </div>
 
-        }
+        } */}
 
-        {
-          messages.map(m => (
-            <SendMessage message={m} key={m.id}></SendMessage>
-          ))
-        }
+          {
+            senderBlock === true &&
+            <div className='flex items-center justify-center mb-72 w-1/2 m-auto rounded-2xl border-2 border-bg dark:border-bgDark1 dark:text-loginInfo'>
+              <p className='text-2xl'>
+                Blocked You
+              </p>
+            </div>
+          }
+          {
+            senderState === false && senderBlock === false && block === false && messages.map(m => (
+              deletedDate !== false
+                ? deletedDate < m.date
+                  ? <SendMessage message={m} key={m.id}></SendMessage>
+                  : ""
+                : ""))
+          }
+        </div>
       </div>
+      <div className='w-full h-full dark:flex flex-col overflow-y-hidden justify-end hidden' style={{ backgroundRepeat: "repeat", backgroundImage: `url(${chatBgDark})` }}>
 
+        <div className='scrollbarLight dark:hidden overflow-y-auto pt-4 px-7'>
+          {/* {senderState === false && messages.length > 10 &&
+
+          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
+            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+          </div>
+
+        } */}
+
+          {
+            senderBlock === true &&
+            <div className='flex items-center justify-center mb-72 w-1/2 m-auto rounded-2xl border-2 border-bg dark:border-bgDark1 dark:text-loginInfo'>
+              <p className='text-2xl'>
+                Blocked You
+              </p>
+            </div>
+          }
+          {
+            senderState === false && senderBlock === false && block === false && messages.map(m => (
+              deletedDate !== false
+                ? deletedDate < m.date
+                  ? <SendMessage message={m} key={m.id}></SendMessage>
+                  : ""
+                : ""))
+          }
+        </div>
+
+        <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
+          {/* {senderState === false && messages.length > 10 &&
+
+          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
+            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+          </div>
+
+        } */}
+
+          {
+            senderBlock === true &&
+            <div className='flex items-center justify-center mb-72 w-1/2 m-auto rounded-2xl border-2 border-bg dark:border-bgDark1 dark:text-loginInfo'>
+              <p className='text-2xl'>
+                Blocked You
+              </p>
+            </div>
+          }
+          {
+            senderState === false && senderBlock === false && block === false && messages.map(m => (
+              deletedDate !== false
+                ? deletedDate < m.date
+                  ? <SendMessage message={m} key={m.id}></SendMessage>
+                  : ""
+                : ""))
+          }
+        </div>
+      </div>
     </div >
   )
 }

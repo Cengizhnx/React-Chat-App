@@ -15,8 +15,8 @@ function Index() {
         <div className='w-full h-full flex flex-row'>
             <div className='w-full h-full flex flex-col text-white'>
                 <Header></Header>
-                <Chat></Chat>
-                <Message></Message>
+                <Chat blocks={blocks}></Chat>
+                <Message blocks={blocks}></Message>
 
             </div>
             <div style={{ display: "none" }} className='w-2/3 h-full flex flex-col rounded-r-xl shadow-xl' id="bio">

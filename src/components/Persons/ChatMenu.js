@@ -3,37 +3,62 @@ import { Dropdown } from "flowbite-react";
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete } from "react-icons/ai";
 import { useSelector } from 'react-redux';
-import { deleteDoc, deleteField, doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, deleteField, doc, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
+import { useEffect } from 'react';
 
 function ChatMenu() {
 
     const chatId = useSelector(state => state.users.chatId)
 
     const selectUser = useSelector(state => state.users.selectUser)
+    // const messages = useSelector(state => state.users.allMessages)
 
     function hidevisible_chat() {
         document.getElementById("landing2").style.display = "none";
         document.getElementById("landing1").style.display = "block";
     }
 
+    useEffect(() => {
+        const getMessages = () => {
+
+            const response = onSnapshot(doc(db, "chats", chatId), (docx) => {
+                try {
+                    docx.exists()
+
+                    if (docx.data()[auth.currentUser.uid] === true && docx.data()[selectUser.uid] === true) {
+                        deleteDoc(doc(db, "chats", chatId))
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+
+            })
+            return () => {
+                response()
+            }
+        }
+
+        chatId && getMessages()
+
+    }, [chatId])
+
     const deleteChat = async () => {
 
         if (window.confirm("Are you sure you want to delete the chat ?")) {
 
-            await deleteDoc(doc(db, "chats", chatId))
+            const chatRef0 = doc(db, "chats", chatId);
+
+            await updateDoc(chatRef0, {
+                [auth.currentUser.uid]: true,
+                [auth.currentUser.uid + "deletedDate"]: Timestamp.now()
+            });
 
             hidevisible_chat()
 
             const chatRef1 = doc(db, "userChats", auth.currentUser.uid);
 
             await updateDoc(chatRef1, {
-                [chatId]: deleteField()
-            });
-
-            const chatRef2 = doc(db, "userChats", selectUser.uid);
-
-            await updateDoc(chatRef2, {
                 [chatId]: deleteField()
             });
 
