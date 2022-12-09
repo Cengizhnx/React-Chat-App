@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
 import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
-import { chats, login, logout } from "./redux/userSlice";
+import { chats, groupChats, login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
 import { getStorage, ref, getDownloadURL, deleteObject } from "firebase/storage";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -244,4 +244,5 @@ export const getChats = async () => {
     toast.error(error.message)
   }
 }
+
 

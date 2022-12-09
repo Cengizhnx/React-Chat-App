@@ -11,6 +11,9 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImCheckboxChecked } from "react-icons/im";
 import { useEffect } from 'react';
 
+
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
 function Message({ blocks }) {
 
   const [text, setText] = useState("")
@@ -20,27 +23,29 @@ function Message({ blocks }) {
 
   const chatId = useSelector(state => state.users.chatId)
   const selectUser = useSelector(state => state.users.selectUser)
+  const groupUsers = useSelector(state => state.users.groupUsers)
 
+  console.log(selectUser);
   const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
   const handleKey = (e) => {
     e.code === "Enter" && handleSend();
   };
 
-  useEffect(() => {
-    const getBlocks = () => {
+  // useEffect(() => {
+  //   const getBlocks = () => {
 
-      const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
-        doc.exists() && setBlock(doc.data()[auth.currentUser.uid]) || setSenderBlock(doc.data()[selectUser.uid])
-      })
-      return () => {
-        response()
-      }
-    }
+  //     const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
+  //       doc.exists() && setBlock(doc.data()[auth.currentUser.uid]) || setSenderBlock(doc.data()[selectUser.uid])
+  //     })
+  //     return () => {
+  //       response()
+  //     }
+  //   }
 
-    chatId && getBlocks()
+  //   chatId && getBlocks()
 
-  }, [chatId, block, senderBlock])
+  // }, [chatId, block, senderBlock])
 
   console.log(selectUser);
 
@@ -50,19 +55,6 @@ function Message({ blocks }) {
     // }
     if (img || text) {
       if (img === "" || img === null) {
-        await updateDoc(doc(db, "chats", chatId), {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: auth.currentUser.uid,
-            [auth.currentUser.uid]: false,
-            [selectUser.uid]: false,
-            date: Timestamp.now(),
-          }),
-          [auth.currentUser.uid]: false,
-          [selectUser.uid]: false,
-        })
-
         await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
           [chatId + ".lastMessage"]: {
             text
@@ -76,57 +68,203 @@ function Message({ blocks }) {
           [chatId + ".id"]: chatId
         })
 
-        await updateDoc(doc(db, "userChats", selectUser.uid), {
-          [chatId + ".lastMessage"]: {
-            text
-          },
+        if (selectUser.type === "group") {
+          for (let index = 0; index < groupUsers.length; index++) {
+            await updateDoc(doc(db, "chats", chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: auth.currentUser.uid,
+                [groupUsers[index].uid]: false,
+                date: Timestamp.now(),
+              }),
+              [groupUsers[index].uid]: false,
+            })
+          }
 
-          [chatId + ".userInfo"]: {
-            user: {
-              description: auth.currentUser.displayName,
-              name: auth.currentUser.displayName,
-              photoURL: auth.currentUser.photoURL,
-              phone_number: auth.currentUser.phoneNumber,
-              timeStamp: serverTimestamp(),
-              uid: auth.currentUser.uid,
-              username: auth.currentUser.displayName,
-            }
-          },
+          for (let index = 0; index < groupUsers.length; index++) {
+            await updateDoc(doc(db, "userChats", groupUsers[index].uid), {
+              [chatId + ".lastMessage"]: {
+                text,
+              },
 
-          [chatId + ".date"]: serverTimestamp(),
-          [chatId + ".id"]: chatId
+              [chatId + ".userInfo"]: {
+                user: {
+                  description: selectUser.description,
+                  name: selectUser.name,
+                  photoURL: selectUser.photoURL,
+                  id: selectUser.id,
+                  type: selectUser.type
+                }
+              },
 
-        })
+              [chatId + ".date"]: serverTimestamp(),
+              [chatId + ".id"]: chatId
+            })
+          }
+        }
+        else {
+          await updateDoc(doc(db, "chats", chatId), {
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: auth.currentUser.uid,
+              [auth.currentUser.uid]: false,
+              [selectUser.uid]: false,
+              date: Timestamp.now(),
+            }),
+            [auth.currentUser.uid]: false,
+            [selectUser.uid]: false,
+          })
+
+          await updateDoc(doc(db, "userChats", selectUser.uid), {
+            [chatId + ".lastMessage"]: {
+              text
+            },
+
+            [chatId + ".userInfo"]: {
+              user: {
+                description: auth.currentUser.displayName,
+                name: auth.currentUser.displayName,
+                photoURL: auth.currentUser.photoURL,
+                phone_number: auth.currentUser.phoneNumber,
+                timeStamp: serverTimestamp(),
+                uid: auth.currentUser.uid,
+                username: auth.currentUser.displayName,
+              }
+            },
+
+            [chatId + ".date"]: serverTimestamp(),
+            [chatId + ".id"]: chatId
+
+          })
+        }
+
+
       }
+      setText("")
 
-      if (img !== "" && img !== null) {
+      if (img !== "" && img !== null && img.type.match(imageMimeType)) {
         const storageRef = ref(storage, uuid());
 
         const uploadTask = uploadBytesResumable(storageRef, img);
 
-        uploadTask.on(
-          (error) => {
-            //TODO:Handle Error
+        await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
+          [chatId + ".lastMessage"]: {
+            text,
+            img: "true"
           },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-              await updateDoc(doc(db, "chats", chatId), {
-                messages: arrayUnion({
-                  id: uuid(),
-                  text,
+
+          [chatId + ".userInfo"]: {
+            user: selectUser,
+          },
+
+          [chatId + ".date"]: serverTimestamp(),
+          [chatId + ".id"]: chatId
+        })
+
+        if (selectUser.type === "group") {
+          uploadTask.on(
+            (error) => {
+              //TODO:Handle Error
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                await updateDoc(doc(db, "chats", chatId), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text,
+                    [auth.currentUser.uid]: false,
+                    // [selectUser.id]: false,
+                    senderId: auth.currentUser.uid,
+                    date: Timestamp.now(),
+                    img: downloadURL,
+                  }),
+                  [auth.currentUser.uid]: false,
+                  // [selectUser.id]: false,
+                });
+              });
+            }
+          );
+
+          for (let index = 0; index < groupUsers.length; index++) {
+            await updateDoc(doc(db, "userChats", groupUsers[index].uid), {
+              [chatId + ".lastMessage"]: {
+                text,
+                img: "true"
+              },
+
+              [chatId + ".userInfo"]: {
+                user: {
+                  description: selectUser.description,
+                  name: selectUser.name,
+                  photoURL: selectUser.photoURL,
+                  id: selectUser.id,
+                  type: selectUser.type
+                }
+              },
+
+              [chatId + ".date"]: serverTimestamp(),
+              [chatId + ".id"]: chatId
+
+            })
+          }
+        }
+        else {
+          uploadTask.on(
+            (error) => {
+              //TODO:Handle Error
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                await updateDoc(doc(db, "chats", chatId), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text,
+                    [auth.currentUser.uid]: false,
+                    [selectUser.uid]: false,
+                    senderId: auth.currentUser.uid,
+                    date: Timestamp.now(),
+                    img: downloadURL,
+                  }),
                   [auth.currentUser.uid]: false,
                   [selectUser.uid]: false,
-                  senderId: auth.currentUser.uid,
-                  date: Timestamp.now(),
-                  img: downloadURL,
-                }),
-                [auth.currentUser.uid]: false,
-                [selectUser.uid]: false,
+                });
               });
-            });
-          }
-        );
+            }
+          );
+
+          await updateDoc(doc(db, "userChats", selectUser.uid), {
+            [chatId + ".lastMessage"]: {
+              text,
+              img: "true"
+            },
+
+            [chatId + ".userInfo"]: {
+              user: {
+                description: auth.currentUser.displayName,
+                name: auth.currentUser.displayName,
+                photoURL: auth.currentUser.photoURL,
+                phone_number: auth.currentUser.phoneNumber,
+                timeStamp: serverTimestamp(),
+                uid: auth.currentUser.uid,
+                username: auth.currentUser.displayName,
+              }
+            },
+
+            [chatId + ".date"]: serverTimestamp(),
+            [chatId + ".id"]: chatId
+
+          })
+        }
+
       }
+      else if (!img.type.match(imageMimeType)) {
+        alert("You can send only png, jpg, jpeg images !");
+        return;
+      }
+      setText("")
+
     }
 
     setText("")
@@ -145,6 +283,7 @@ function Message({ blocks }) {
             type="file"
             style={{ display: "none" }}
             id="file"
+            accept="image/png,image/jpeg"
             disabled={senderBlock === false && block === false ? false : true}
             onChange={(e) => setImg(e.target.files[0])}
           />

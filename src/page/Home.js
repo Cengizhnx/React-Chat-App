@@ -12,6 +12,7 @@ import Index from '../components/Chat/Message/Index'
 import Block from './Block'
 import Friends from './Friends'
 import DarkMode from '../components/DarkMode'
+import Group from '../components/Group/Group'
 
 function Home() {
 
@@ -54,6 +55,9 @@ function Home() {
                     </div>
                     <div style={{ display: "none" }} id='div_friends' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
                         <Friends friends={friends}></Friends>
+                    </div>
+                    <div style={{ display: "none" }} id='div_group' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
+                        <Group></Group>
                     </div>
                     <div id='landing1' className="divHidden w-full h-full flex justify-center xs:rounded-r-none md:rounded-r-2xl dark:shadow-2xl">
                         <LandingPage></LandingPage>

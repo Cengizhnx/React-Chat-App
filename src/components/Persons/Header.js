@@ -8,6 +8,8 @@ import { auth, getUserPhoto2, userDelete, userLogout } from '../../firebase';
 import { logout } from '../../redux/userSlice';
 import { Dropdown } from "flowbite-react";
 import { deleteUser } from 'firebase/auth';
+import { HiUserGroup } from "react-icons/hi";
+
 import Theme from "../Theme";
 
 function Header({ data }) {
@@ -63,6 +65,11 @@ function Header({ data }) {
         document.getElementById("div_friends").style.display = "block";
     }
 
+    function hidevisible_group() {
+        document.getElementById("div_left").style.display = "none";
+        document.getElementById("div_group").style.display = "block";
+    }
+
 
     // useEffect(() => {
     //     if (!status) {
@@ -82,6 +89,14 @@ function Header({ data }) {
                         arrowIcon={true}
                         inline={true}
                     >
+                        <Link onClick={hidevisible_group} className="w-full">
+                            <Dropdown.Item>
+                                <HiUserGroup className="h-6 w-6 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                                New Group
+                            </Dropdown.Item>
+                        </Link>
+
+                        <Dropdown.Divider />
                         <Link onClick={hidevisible_friends} className="w-full">
                             <Dropdown.Item>
                                 <RiChatSmile3Line className="h-6 w-6 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />

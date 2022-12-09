@@ -16,7 +16,6 @@ function Chat({ blocks }) {
   const [senderBlock, setSenderBlock] = useState(false)
   const [blockedDate, setBlockedDate] = useState(false)
 
-
   const chatId = useSelector(state => state.users.chatId)
   const selectUser = useSelector(state => state.users.selectUser)
 
@@ -45,21 +44,20 @@ function Chat({ blocks }) {
 
     chatId && getMessages() && getBlocks()
 
-  }, [chatId, block, senderBlock])
-
+  }, [chatId, block, senderBlock,selectUser.uid])
 
   return (
     <div className='bg-bgLight2 dark:bg-bgDark2 text-black dark:text-white relative z-0 w-full h-full flex flex-col overflow-y-hidden justify-end'>
       <div className='w-full h-full flex flex-col overflow-y-hidden justify-end dark:hidden' style={{ backgroundRepeat: "repeat", backgroundImage: `url(${chatLightBg})` }}>
 
         <div className='scrollbarLight dark:hidden overflow-y-auto pt-4 px-7'>
-          {/* {senderState === false && messages.length > 10 &&
+          {senderState === false && senderBlock === false &&
 
-          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
-            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
-          </div>
+            <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg mb-5'>
+              <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+            </div>
 
-        } */}
+          }
 
           {
             senderBlock === true &&
@@ -80,13 +78,13 @@ function Chat({ blocks }) {
         </div>
 
         <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
-          {/* {senderState === false && messages.length > 10 &&
+          {senderState === false && senderBlock === false &&
 
-          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
-            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
-          </div>
+            <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg mb-5'>
+              <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+            </div>
 
-        } */}
+          }
 
           {
             senderBlock === true &&
@@ -109,13 +107,13 @@ function Chat({ blocks }) {
       <div className='w-full h-full dark:flex flex-col overflow-y-hidden justify-end hidden' style={{ backgroundRepeat: "repeat", backgroundImage: `url(${chatBgDark})` }}>
 
         <div className='scrollbarLight dark:hidden overflow-y-auto pt-4 px-7'>
-          {/* {senderState === false && messages.length > 10 &&
+          {senderState === false && senderBlock === false &&
 
-          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
-            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
-          </div>
+            <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg mb-5'>
+              <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+            </div>
 
-        } */}
+          }
 
           {
             senderBlock === true &&
@@ -136,13 +134,13 @@ function Chat({ blocks }) {
         </div>
 
         <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
-          {/* {senderState === false && messages.length > 10 &&
+          {senderState === false && senderBlock === false &&
 
-          <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg'>
-            <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
-          </div>
+            <div className='bg-bgLight1 dark:bg-bgDark1 w-2/3 p-2 m-auto text-center rounded-lg mb-5'>
+              <p className='text-xs tracking-wide text-bgDark2 dark:text-loginInfo'>🔒 Messages are end-to-end encrypted. No one outside of this chat including ChatApp, can read or listen to your messages.</p>
+            </div>
 
-        } */}
+          }
 
           {
             senderBlock === true &&

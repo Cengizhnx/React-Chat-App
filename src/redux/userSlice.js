@@ -8,6 +8,9 @@ export const userSlice = createSlice({
         selectUser: false,
         chatId: false,
         chats: false,
+        groupPrew: [],
+        groupChats: false,
+        groupUsers: false,
     },
     reducers: {
         login: (state, action) => {
@@ -27,9 +30,33 @@ export const userSlice = createSlice({
         chats: (state, action) => {
             state.chats = action.payload;
         },
+        addGroupPrew: (state, action) => {
+            const temp = action.payload
+            const items = state.groupPrew.filter((item) => item.uid === temp.uid)
+            if (items.length > 0) {
+            }
+            else {
+                state.groupPrew.push(action.payload);
+            }
+        },
+        deleteGroupPrew: (state, action) => {
+            const temp = action.payload
+            console.log(temp);
+            const items = state.groupPrew.find((item) => item.uid === temp.uid)
+            state.groupPrew.pop(items);
+        },
+        resetGroupPrew: (state) => {
+            state.groupPrew = []
+        },
+        groupChats: (state, action) => {
+            state.groupChats = action.payload;
+        },
+        groupUsers: (state, action) => {
+            state.groupUsers = action.payload;
+        },
     }
 })
 
-export const { login, logout, addSelectUSer, chatID, chats } = userSlice.actions;
+export const { login, logout, addSelectUSer, chatID, chats, addGroupPrew, deleteGroupPrew, resetGroupPrew, groupChats, groupUsers } = userSlice.actions;
 
 export default userSlice.reducer;
