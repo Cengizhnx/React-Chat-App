@@ -17,10 +17,14 @@ function SendMessage({ message }) {
     return (
         <div ref={ref} className={`message flex items-center ${message.senderId === auth.currentUser.uid && "owner"}`}>
             {
-                message[auth.currentUser.uid] === false &&
+                
                 <>
                     <div className="messageInfo flex items-center">
-                        <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : selectUser.photoURL} alt="landing" />
+                        {
+                            selectUser.type === "group"
+                                ? <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : message.senderPhotoUrl} alt="group" />
+                                : <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : selectUser.photoURL} alt="user" />
+                        }
                         <h5 className='text-xs mt-1 tracking-wider text-bgDark0 dark:text-bgLight2'>{moment(message.date?.toDate()).format("H:mm")}</h5>
                     </div>
                     <div className="messageContent">

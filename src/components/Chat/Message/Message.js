@@ -24,8 +24,17 @@ function Message({ blocks }) {
   const chatId = useSelector(state => state.users.chatId)
   const selectUser = useSelector(state => state.users.selectUser)
   const groupUsers = useSelector(state => state.users.groupUsers)
+  const groupStates = useSelector(state => state.users.groupState)
 
-  console.log(selectUser);
+  const isThere = selectUser.type === "group" && [groupUsers]?.findIndex(function (item) {
+    for (let i = 0; i < item.length; i++) {
+      const temp = item[i].uid === auth.currentUser.uid
+      if (temp) {
+        return temp
+      }
+    }
+  }) >= 0;
+
   const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
   const handleKey = (e) => {
@@ -47,8 +56,6 @@ function Message({ blocks }) {
 
   // }, [chatId, block, senderBlock])
 
-  console.log(selectUser);
-
   const handleSend = async () => {
     // if (text) {
 
@@ -69,18 +76,24 @@ function Message({ blocks }) {
         })
 
         if (selectUser.type === "group") {
+          await updateDoc(doc(db, "chats", chatId), {
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: auth.currentUser.uid,
+              senderPhotoUrl: auth.currentUser.photoURL,
+              [auth.currentUser.uid]: false,
+              date: Timestamp.now(),
+            }),
+            [auth.currentUser.uid]: false,
+          })
+
           for (let index = 0; index < groupUsers.length; index++) {
             await updateDoc(doc(db, "chats", chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: auth.currentUser.uid,
-                [groupUsers[index].uid]: false,
-                date: Timestamp.now(),
-              }),
               [groupUsers[index].uid]: false,
             })
           }
+
 
           for (let index = 0; index < groupUsers.length; index++) {
             await updateDoc(doc(db, "userChats", groupUsers[index].uid), {
@@ -109,6 +122,7 @@ function Message({ blocks }) {
               id: uuid(),
               text,
               senderId: auth.currentUser.uid,
+              senderPhotoUrl: auth.currentUser.photoURL,
               [auth.currentUser.uid]: false,
               [selectUser.uid]: false,
               date: Timestamp.now(),
@@ -166,7 +180,7 @@ function Message({ blocks }) {
         if (selectUser.type === "group") {
           uploadTask.on(
             (error) => {
-              //TODO:Handle Error
+              console.log(error);
             },
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -176,6 +190,7 @@ function Message({ blocks }) {
                     text,
                     [auth.currentUser.uid]: false,
                     // [selectUser.id]: false,
+                    senderPhotoUrl: auth.currentUser.photoURL,
                     senderId: auth.currentUser.uid,
                     date: Timestamp.now(),
                     img: downloadURL,
@@ -284,7 +299,7 @@ function Message({ blocks }) {
             style={{ display: "none" }}
             id="file"
             accept="image/png,image/jpeg"
-            disabled={senderBlock === false && block === false ? false : true}
+            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false ? false : true}
             onChange={(e) => setImg(e.target.files[0])}
           />
           <label htmlFor="file">
@@ -302,7 +317,7 @@ function Message({ blocks }) {
         <div className='flex flex-row justify-start items-center w-5/6 h-12 p-1 rounded-lg bg-bgLight2 dark:bg-bgDark2'>
           <input
             value={text}
-            disabled={senderBlock === false && block === false ? false : true}
+            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false ? false : true}
             onKeyDown={handleKey}
             onChange={(e) => setText(e.target.value)}
             className='relative w-full rounded-md bg-bgLight1 text-bgDark1 dark:text-bgLight2 dark:bg-bgDarkInput focus:ring-2 focus:ring-white dark:focus:ring-bgDark0'

@@ -43,6 +43,8 @@ function ChatMenu() {
 
     }, [chatId])
 
+    console.log(selectUser.type);
+
     const deleteChat = async () => {
 
         if (window.confirm("Are you sure you want to delete the chat ?")) {
@@ -58,9 +60,12 @@ function ChatMenu() {
 
             const chatRef1 = doc(db, "userChats", auth.currentUser.uid);
 
-            await updateDoc(chatRef1, {
-                [chatId]: deleteField()
-            });
+            if (selectUser.type !== "group") {
+                await updateDoc(chatRef1, {
+                    [chatId]: deleteField()
+                });
+            }
+
 
         }
 

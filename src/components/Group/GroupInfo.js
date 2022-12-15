@@ -3,7 +3,7 @@ import { TextInput, Label, Button } from 'flowbite-react'
 import { GoCheck } from "react-icons/go";
 import { MdSubject } from "react-icons/md";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { db, storage } from '../../firebase';
+import { auth, db, storage } from '../../firebase';
 import { uuidv4 } from '@firebase/util';
 import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,6 +36,9 @@ function GroupInfo() {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        await setDoc(doc(db, "groups", id), {
+                            [auth.currentUser.uid]: `${auth.currentUser.uid}`,
+                        });
                         for (let index = 0; index < groupPrew.length; index++) {
                             await updateDoc(doc(db, "userChats", groupPrew[index].uid), {
                                 [id]: {
@@ -63,7 +66,10 @@ function GroupInfo() {
                         for (let index = 0; index < groupPrew.length + 1; index++) {
                             await updateDoc(doc(db, "chats", id), {
                                 messages: [],
+                                state: true,
                                 [groupPrew[index].uid + "deletedDate"]: true,
+                                [groupPrew[index].uid + "createdDate"]: serverTimestamp(),
+                                [groupPrew[index].uid]: false,
                             });
                         }
                     });

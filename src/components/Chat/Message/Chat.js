@@ -12,12 +12,14 @@ function Chat({ blocks }) {
   const [messages, setMessages] = useState([])
   const [senderState, setSenderState] = useState(false)
   const [deletedDate, setDeletedDate] = useState(false)
+  const [createdDate, setCreatedDate] = useState(false)
   const [block, setBlock] = useState(false)
   const [senderBlock, setSenderBlock] = useState(false)
   const [blockedDate, setBlockedDate] = useState(false)
 
   const chatId = useSelector(state => state.users.chatId)
   const selectUser = useSelector(state => state.users.selectUser)
+  const groupUsers = useSelector(state => state.users.groupUsers)
 
   const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
@@ -25,7 +27,7 @@ function Chat({ blocks }) {
     const getMessages = () => {
 
       const response = onSnapshot(doc(db, "chats", chatId), (doc) => {
-        doc.exists() && setMessages(doc.data().messages) || setSenderState(doc.data()[auth.currentUser.uid]) || setDeletedDate(doc.data()[auth.currentUser.uid + "deletedDate"])
+        doc.exists() && setMessages(doc.data().messages) || setSenderState(doc.data()[auth.currentUser.uid]) || setDeletedDate(doc.data()[auth.currentUser.uid + "deletedDate"]) || setCreatedDate(doc.data()[auth.currentUser.uid + "createdDate"])
       })
       return () => {
         response()
@@ -44,7 +46,7 @@ function Chat({ blocks }) {
 
     chatId && getMessages() && getBlocks()
 
-  }, [chatId, block, senderBlock,selectUser.uid])
+  }, [chatId, block, senderBlock, selectUser.uid])
 
   return (
     <div className='bg-bgLight2 dark:bg-bgDark2 text-black dark:text-white relative z-0 w-full h-full flex flex-col overflow-y-hidden justify-end'>
@@ -68,13 +70,28 @@ function Chat({ blocks }) {
             </div>
           }
           {
-            senderState === false && senderBlock === false && block === false && messages.map(m => (
-              deletedDate !== false
-                ? deletedDate < m.date
-                  ? <SendMessage message={m} key={m.id}></SendMessage>
-                  : ""
-                : ""))
+            selectUser.type !== "group"
+              ? senderState === false && senderBlock === false && block === false && messages.map(m => (
+                deletedDate !== false
+                  ? deletedDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : ""))
+              : messages.map(m => (
+                deletedDate !== false && senderState === false
+                  ? deletedDate || createdDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : m.date < createdDate
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                      || deletedDate !== false && senderState === true
+                      ? m.date < deletedDate && createdDate
+                        ? <SendMessage message={m} key={m.id}></SendMessage>
+                        : ""
+                      : ""))
           }
+
         </div>
 
         <div className='hidden dark:block scrollbarDark overflow-y-auto pt-4 px-7'>
@@ -95,12 +112,26 @@ function Chat({ blocks }) {
             </div>
           }
           {
-            senderState === false && senderBlock === false && block === false && messages.map(m => (
-              deletedDate !== false
-                ? deletedDate < m.date
-                  ? <SendMessage message={m} key={m.id}></SendMessage>
-                  : ""
-                : ""))
+            selectUser.type !== "group"
+              ? senderState === false && senderBlock === false && block === false && messages.map(m => (
+                deletedDate !== false
+                  ? deletedDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : ""))
+              : messages.map(m => (
+                deletedDate !== false && senderState === false
+                  ? deletedDate || createdDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : m.date < createdDate
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                      || deletedDate !== false && senderState === true
+                      ? m.date < deletedDate && createdDate
+                        ? <SendMessage message={m} key={m.id}></SendMessage>
+                        : ""
+                      : ""))
           }
         </div>
       </div>
@@ -124,12 +155,26 @@ function Chat({ blocks }) {
             </div>
           }
           {
-            senderState === false && senderBlock === false && block === false && messages.map(m => (
-              deletedDate !== false
-                ? deletedDate < m.date
-                  ? <SendMessage message={m} key={m.id}></SendMessage>
-                  : ""
-                : ""))
+            selectUser.type !== "group"
+              ? senderState === false && senderBlock === false && block === false && messages.map(m => (
+                deletedDate !== false
+                  ? deletedDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : ""))
+              : messages.map(m => (
+                deletedDate !== false && senderState === false
+                  ? deletedDate || createdDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : m.date < createdDate
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                      || deletedDate !== false && senderState === true
+                      ? m.date < deletedDate && createdDate
+                        ? <SendMessage message={m} key={m.id}></SendMessage>
+                        : ""
+                      : ""))
           }
         </div>
 
@@ -151,12 +196,26 @@ function Chat({ blocks }) {
             </div>
           }
           {
-            senderState === false && senderBlock === false && block === false && messages.map(m => (
-              deletedDate !== false
-                ? deletedDate < m.date
-                  ? <SendMessage message={m} key={m.id}></SendMessage>
-                  : ""
-                : ""))
+            selectUser.type !== "group"
+              ? senderState === false && senderBlock === false && block === false && messages.map(m => (
+                deletedDate !== false
+                  ? deletedDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : ""))
+              : messages.map(m => (
+                deletedDate !== false && senderState === false
+                  ? deletedDate || createdDate < m.date
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                  : m.date < createdDate
+                    ? <SendMessage message={m} key={m.id}></SendMessage>
+                    : ""
+                      || deletedDate !== false && senderState === true
+                      ? m.date < deletedDate && createdDate
+                        ? <SendMessage message={m} key={m.id}></SendMessage>
+                        : ""
+                      : ""))
           }
         </div>
       </div>
