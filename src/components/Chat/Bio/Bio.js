@@ -36,7 +36,7 @@ function Bio({ blocks, friends }) {
     const groupUsers = useSelector(state => state.users.groupUsers)
     const groupStates = useSelector(state => state.users.groupState)
     const userState = useSelector(state => state.users.userState)
-    console.log(groupUsers);
+    console.log(selectUser);
     const [image, setImage] = useState(null)
 
     const [name, setName] = useState(selectUser.name)
@@ -235,7 +235,7 @@ function Bio({ blocks, friends }) {
                     <div className='flex flex-col items-center justify-center my-6'>
                         <img className='w-44 h-44 object-cover rounded-full shadow-2xl shadow-neutral-900' src={(userState && selectUser.photoURL) ? selectUser.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} id='myimg' alt="" />
                         <h1 className='flex flex-row text-2xl text-black dark:text-white tracking-wide mt-5'>
-                            {selectUser.name}
+                            {selectUser.name ? selectUser.name : selectUser.username}
                             {
                                 selectUser.type === "group" && groupStates && [managers].map((user) => (
                                     user[auth.currentUser.uid] === auth.currentUser.uid &&
@@ -257,7 +257,7 @@ function Bio({ blocks, friends }) {
                                 : <h1 className='text-base text-black dark:text-white tracking-wide'>About Me</h1>
                         }
 
-                        <p className='text-sm tracking-wider text-loginTextBg dark:text-phoneNumber mt-1'>{selectUser.description}</p>
+                        <p className='text-sm tracking-wider text-loginTextBg dark:text-phoneNumber mt-1'>{selectUser.description ? selectUser.description : selectUser.username}</p>
                     </div>
 
                     {/* {
@@ -698,6 +698,7 @@ function Bio({ blocks, friends }) {
                                         type="text"
                                         placeholder="Your Name"
                                         value={name}
+                                        required={true}
                                         icon={HiUser}
                                         onChange={(e) => setName(e.target.value)}
                                     />
@@ -714,6 +715,7 @@ function Bio({ blocks, friends }) {
                                         type="text"
                                         placeholder="Hi! I'm usign Chat App !"
                                         value={desc}
+                                        required={true}
                                         icon={SiAboutdotme}
                                         onChange={(e) => setDesc(e.target.value)}
                                     />

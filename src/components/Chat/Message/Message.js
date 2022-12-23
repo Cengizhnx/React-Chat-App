@@ -11,6 +11,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImCheckboxChecked } from "react-icons/im";
 import { useEffect } from 'react';
 import { userState } from '../../../redux/userSlice';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
@@ -21,6 +23,7 @@ function Message({ blocks }) {
   const [block, setBlock] = useState(false)
   const [senderBlock, setSenderBlock] = useState(false)
   const [userIsThere, setUserIsThere] = useState(false)
+  const [openPicker, setOpenPicker] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -98,7 +101,7 @@ function Message({ blocks }) {
               senderId: auth.currentUser.uid,
               senderPhotoUrl: auth.currentUser.photoURL,
               [auth.currentUser.uid]: false,
-              date: Timestamp.now(),
+              date: Date.now(),
             }),
             [auth.currentUser.uid]: false,
           })
@@ -140,7 +143,7 @@ function Message({ blocks }) {
               senderPhotoUrl: auth.currentUser.photoURL,
               [auth.currentUser.uid]: false,
               [selectUser.uid]: false,
-              date: Timestamp.now(),
+              date: Date.now(),
             }),
             [auth.currentUser.uid]: false,
             [selectUser.uid]: false,
@@ -207,7 +210,7 @@ function Message({ blocks }) {
                     // [selectUser.id]: false,
                     senderPhotoUrl: auth.currentUser.photoURL,
                     senderId: auth.currentUser.uid,
-                    date: Timestamp.now(),
+                    date: Date.now(),
                     img: downloadURL,
                   }),
                   [auth.currentUser.uid]: false,
@@ -254,7 +257,7 @@ function Message({ blocks }) {
                     [auth.currentUser.uid]: false,
                     [selectUser.uid]: false,
                     senderId: auth.currentUser.uid,
-                    date: Timestamp.now(),
+                    date: Date.now(),
                     img: downloadURL,
                   }),
                   [auth.currentUser.uid]: false,
@@ -301,12 +304,25 @@ function Message({ blocks }) {
     setImg("");
   }
 
+  console.log(text);
+
   return (
     <div id="chat_footer" className='w-full h-20 rounded-br-xl flex items-center bg-bgLight2 dark:bg-bgDark2 border-t-2 border-gray-300 dark:border-messageHover'>
       <div className='w-full px-3 flex flex-row items-center justify-around' >
-        {/* <button >
+        <button onClick={() => setOpenPicker(prev => !prev)}>
           <BsEmojiWink className="w-7 h-7 text-bgDark2 dark:text-loginInfo" />
-        </button> */}
+          <div className='dark:hidden'>
+            <div style={{ display: openPicker ? "inline" : "none", bottom: 100, position: 'fixed' }}>
+              <Picker data={data} theme="light" onEmojiSelect={(e) => setText(text + e.native)} />
+            </div>
+          </div>
+          <div className='hidden dark:block'>
+            <div style={{ display: openPicker ? "inline" : "none", bottom: 100, position: 'fixed' }}>
+              <Picker data={data} theme="dark" onEmojiSelect={(e) => setText(text + e.native)} />
+            </div>
+          </div>
+
+        </button>
         <button>
           {/* <img src={IoMdImages} className="w-8 h-8 text-bgDark2 dark:text-loginInfo" alt="" /> */}
           <input

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, deleteField, doc, getFirestore, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { chats, groupChats, login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
@@ -46,6 +46,10 @@ export const userRegister = async (value, username, downloadURL) => {
       createdAt: serverTimestamp()
     });
 
+    await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
+      createdAt: deleteField()
+    });
+
   } catch (error) {
     toast.error(error.message)
   }
@@ -61,7 +65,6 @@ export const setUpRecaptcha = (value) => {
 
 export const userLogout = async () => {
   try {
-    await userOnOff()
     await signOut(auth)
     return auth
   } catch (error) {
@@ -69,22 +72,8 @@ export const userLogout = async () => {
   }
 }
 
-export const userOnOff = async () => {
-  try {
-    await updateDoc(doc(db, "users", auth.currentUser.displayName), {
-      isOnline: false,
-    });
-  } catch (error) {
-    toast.error(error.message);
-  }
-}
-
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    updateDoc(doc(db, "users", user.displayName), {
-      isOnline: true,
-    });
     store.dispatch(login(user))
   } else {
     store.dispatch(logout())

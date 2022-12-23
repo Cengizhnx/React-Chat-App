@@ -8,7 +8,6 @@ function FriendsList({ friends }) {
 
     const dispatch = useDispatch()
 
-    const chats = useSelector(state => state.users.chats)
     const data = GetUserProfile()
 
     function hidevisible_chat(item) {
@@ -48,7 +47,7 @@ function FriendsList({ friends }) {
 
                                         <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={item.user.photoURL} alt="user" />
                                         <div className='w-full flex flex-col justify-center ml-4'>
-                                            <h1 className='text-base tracking-wider mb-1'>{item.user.name} <span className='text-xs'> </span></h1>
+                                            <h1 className='text-base tracking-wider mb-1'>{item.user.name} </h1>
                                             <p className='text-sm tracking-wider text-phoneNumber'>@{item.user.username}</p>
                                         </div>
                                     </div>
