@@ -2,21 +2,25 @@ import { Toaster } from 'react-hot-toast';
 import FriendsSearch from './FriendsSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSelectUSer, chatID } from '../../redux/userSlice';
-import { auth } from '../../firebase';
+import { auth, GetUserProfile } from '../../firebase';
 
 function FriendsList({ friends }) {
 
     const dispatch = useDispatch()
 
     const chats = useSelector(state => state.users.chats)
-    
+    const data = GetUserProfile()
+
     function hidevisible_chat(item) {
         document.getElementById("landing2").style.display = "block";
         document.getElementById("landing1").style.display = "none";
 
-        dispatch(addSelectUSer(item))
+        const filter = data?.find(items => items.uid === item.uid)
+        dispatch(addSelectUSer(filter))
 
-        const cid = auth.currentUser.uid + item.uid
+        const cid = auth.currentUser.uid > filter.uid
+            ? auth.currentUser.uid + filter.uid
+            : filter.uid + auth.currentUser.uid;
         dispatch(chatID(cid))
     }
 

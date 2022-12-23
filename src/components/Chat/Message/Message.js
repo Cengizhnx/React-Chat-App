@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import { BiMessageRounded } from "react-icons/bi";
 import { IoMdImages } from "react-icons/io";
 import { BsEmojiWink } from "react-icons/bs";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { auth, db, storage } from '../../../firebase';
 import { v4 as uuid } from "uuid";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImCheckboxChecked } from "react-icons/im";
 import { useEffect } from 'react';
-
+import { userState } from '../../../redux/userSlice';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
@@ -20,6 +20,9 @@ function Message({ blocks }) {
   const [img, setImg] = useState("")
   const [block, setBlock] = useState(false)
   const [senderBlock, setSenderBlock] = useState(false)
+  const [userIsThere, setUserIsThere] = useState(false)
+
+  const dispatch = useDispatch()
 
   const chatId = useSelector(state => state.users.chatId)
   const selectUser = useSelector(state => state.users.selectUser)
@@ -41,20 +44,32 @@ function Message({ blocks }) {
     e.code === "Enter" && handleSend();
   };
 
-  // useEffect(() => {
-  //   const getBlocks = () => {
+  useEffect(() => {
+    const getBlocks = () => {
 
-  //     const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
-  //       doc.exists() && setBlock(doc.data()[auth.currentUser.uid]) || setSenderBlock(doc.data()[selectUser.uid])
-  //     })
-  //     return () => {
-  //       response()
-  //     }
-  //   }
+      const response = onSnapshot(doc(db, "blocks", chatId), (doc) => {
+        doc.exists() && setBlock(doc.data()[auth.currentUser.uid]) || setSenderBlock(doc.data()[selectUser.uid])
+      })
+      return () => {
+        response()
+      }
+    }
 
-  //   chatId && getBlocks()
+    const getUser = () => {
+      if (selectUser.type !== "group") {
+        const response = onSnapshot(doc(db, "users", selectUser.username), (doc) => {
+          setUserIsThere(doc.exists())
+          dispatch(userState(doc.exists()))
+        })
+        return () => {
+          response()
+        }
+      }
+    }
 
-  // }, [chatId, block, senderBlock])
+    chatId && getBlocks() && getUser()
+
+  }, [chatId, block, senderBlock, selectUser])
 
   const handleSend = async () => {
     // if (text) {
@@ -64,7 +79,7 @@ function Message({ blocks }) {
       if (img === "" || img === null) {
         await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
           [chatId + ".lastMessage"]: {
-            text
+            text,
           },
 
           [chatId + ".userInfo"]: {
@@ -133,7 +148,7 @@ function Message({ blocks }) {
 
           await updateDoc(doc(db, "userChats", selectUser.uid), {
             [chatId + ".lastMessage"]: {
-              text
+              text,
             },
 
             [chatId + ".userInfo"]: {
@@ -166,7 +181,7 @@ function Message({ blocks }) {
         await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
           [chatId + ".lastMessage"]: {
             text,
-            img: "true"
+            img: "true",
           },
 
           [chatId + ".userInfo"]: {
@@ -206,7 +221,7 @@ function Message({ blocks }) {
             await updateDoc(doc(db, "userChats", groupUsers[index].uid), {
               [chatId + ".lastMessage"]: {
                 text,
-                img: "true"
+                img: "true",
               },
 
               [chatId + ".userInfo"]: {
@@ -252,7 +267,7 @@ function Message({ blocks }) {
           await updateDoc(doc(db, "userChats", selectUser.uid), {
             [chatId + ".lastMessage"]: {
               text,
-              img: "true"
+              img: "true",
             },
 
             [chatId + ".userInfo"]: {
@@ -289,9 +304,9 @@ function Message({ blocks }) {
   return (
     <div id="chat_footer" className='w-full h-20 rounded-br-xl flex items-center bg-bgLight2 dark:bg-bgDark2 border-t-2 border-gray-300 dark:border-messageHover'>
       <div className='w-full px-3 flex flex-row items-center justify-around' >
-        <button >
+        {/* <button >
           <BsEmojiWink className="w-7 h-7 text-bgDark2 dark:text-loginInfo" />
-        </button>
+        </button> */}
         <button>
           {/* <img src={IoMdImages} className="w-8 h-8 text-bgDark2 dark:text-loginInfo" alt="" /> */}
           <input
@@ -299,7 +314,7 @@ function Message({ blocks }) {
             style={{ display: "none" }}
             id="file"
             accept="image/png,image/jpeg"
-            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false ? false : true}
+            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false && userIsThere ? false : true}
             onChange={(e) => setImg(e.target.files[0])}
           />
           <label htmlFor="file">
@@ -317,7 +332,7 @@ function Message({ blocks }) {
         <div className='flex flex-row justify-start items-center w-5/6 h-12 p-1 rounded-lg bg-bgLight2 dark:bg-bgDark2'>
           <input
             value={text}
-            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false ? false : true}
+            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false && userIsThere ? false : true}
             onKeyDown={handleKey}
             onChange={(e) => setText(e.target.value)}
             className='relative w-full rounded-md bg-bgLight1 text-bgDark1 dark:text-bgLight2 dark:bg-bgDarkInput focus:ring-2 focus:ring-white dark:focus:ring-bgDark0'

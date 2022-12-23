@@ -1,6 +1,6 @@
 import { TextInput, Label, Button } from 'flowbite-react'
 import { HiOutlineArrowRight } from "react-icons/hi";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiKey } from "react-icons/hi";
 import { VscCheckAll } from "react-icons/vsc";
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,10 +9,23 @@ import PhoneInput from 'react-phone-number-input'
 import { GetUserProfile, setUpRecaptcha } from '../../firebase';
 import toast, { Toaster } from 'react-hot-toast';
 import DarkMode from '../../components/DarkMode';
+import { useSelector } from 'react-redux';
 
 function Login() {
 
+  const { user } = useSelector(state => state.users)
+  const status = useSelector(state => state.users.status)
+
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user && !status) {
+      navigate('/', {
+        replace: true
+      })
+    }
+  }, [user, navigate, status])
+
   DarkMode()
   const [value, setValue] = useState("")
   const [otp, setOtp] = useState("")

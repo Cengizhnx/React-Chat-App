@@ -1,5 +1,5 @@
 import { TextInput, Label, Button } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiKey, HiSearch, HiAtSymbol } from "react-icons/hi";
 import { VscCheckAll } from "react-icons/vsc";
 import { AiOutlineLogin } from "react-icons/ai";
@@ -12,10 +12,22 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import DarkMode from '../../components/DarkMode';
+import { useSelector } from 'react-redux';
 
 function Register() {
 
     const navigate = useNavigate()
+
+    const { user } = useSelector(state => state.users)
+    const status = useSelector(state => state.users.status)
+
+    useEffect(() => {
+        if (user && !status) {
+            navigate('/', {
+                replace: true
+            })
+        }
+    }, [user, navigate, status])
     DarkMode()
 
     const [value, setValue] = useState("")
@@ -110,7 +122,7 @@ function Register() {
                 getDownloadURL(storageRef).then(async (downloadURL) => {
                     try {
                         await userRegister(value, username, downloadURL)
-                        
+
                         await updateProfile(auth.currentUser, {
                             photoURL: downloadURL,
                         });

@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react';
 function SendMessage({ message }) {
 
     const selectUser = useSelector(state => state.users.selectUser)
+    const userState = useSelector(state => state.users.userState)
 
     const ref = useRef();
 
@@ -17,13 +18,13 @@ function SendMessage({ message }) {
     return (
         <div ref={ref} className={`message flex items-center ${message.senderId === auth.currentUser.uid && "owner"}`}>
             {
-                
+
                 <>
                     <div className="messageInfo flex items-center">
                         {
                             selectUser.type === "group"
                                 ? <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : message.senderPhotoUrl} alt="group" />
-                                : <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : selectUser.photoURL} alt="user" />
+                                : <img className='w-12 h-12 object-cover rounded-full shadow-2xl shadow-neutral-900' src={message.senderId === auth.currentUser.uid ? auth.currentUser.photoURL : (userState && selectUser.photoURL ? selectUser.photoURL : "https://cdn-icons-png.flaticon.com/512/149/149071.png")} alt="user" />
                         }
                         <h5 className='text-xs mt-1 tracking-wider text-bgDark0 dark:text-bgLight2'>{moment(message.date?.toDate()).format("H:mm")}</h5>
                     </div>

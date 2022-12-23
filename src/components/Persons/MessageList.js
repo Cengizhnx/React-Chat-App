@@ -1,6 +1,6 @@
 import { Spinner } from 'flowbite-react';
 import React, { useEffect } from 'react'
-import { auth, getChats } from '../../firebase';
+import { auth, db, getChats } from '../../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSelectUSer, chatID, groupUsers } from '../../redux/userSlice';
 import moment from 'moment'
@@ -24,6 +24,8 @@ function MessageList({ blocks }) {
         dispatch(chatID(item[0]))
     }
 
+
+
     useEffect(() => {
         getChats()
         auth.currentUser.uid && getChats();
@@ -45,7 +47,7 @@ function MessageList({ blocks }) {
                         chats &&
                         Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
                             <div onClick={() => hidevisible_chat(chat)} key={chat[0]} className='w-full h-20 flex items-center justify-between hoverMessage px-6 border-b-2 border-bgLight2 dark:border-messageListBorder hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer'>
-                                <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={chat[1].userInfo?.user.photoURL} alt="landing" />
+                                <img className='w-14 h-14 object-cover rounded-full shadow-2xl shadow-neutral-900' src={chat[1].userInfo?.user.photoURL} alt="" />
                                 <div className='w-full flex flex-col justify-center ml-4'>
                                     <h1 className='text-base tracking-wider mb-1'>{chat[1].userInfo?.user.name}</h1>
                                     <p className='text-sm tracking-wider text-phoneNumber'>
@@ -71,6 +73,7 @@ function MessageList({ blocks }) {
                                         }
                                     </p>
                                 </div>
+
                                 <div className='flex flex-col text-center w-10'>
                                     <p className='text-xs py-2 tracking-wider text-phoneNumber'>{moment(chat[1].date?.toDate()).format("H:mm")}</p>
                                     <ChatMenu></ChatMenu>

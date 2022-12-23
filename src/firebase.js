@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut, updateProfile } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { chats, groupChats, login, logout } from "./redux/userSlice";
 import { store } from "../src/redux/store";
@@ -61,6 +61,7 @@ export const setUpRecaptcha = (value) => {
 
 export const userLogout = async () => {
   try {
+    await userOnOff()
     await signOut(auth)
     return auth
   } catch (error) {
@@ -68,8 +69,22 @@ export const userLogout = async () => {
   }
 }
 
+export const userOnOff = async () => {
+  try {
+    await updateDoc(doc(db, "users", auth.currentUser.displayName), {
+      isOnline: false,
+    });
+  } catch (error) {
+    toast.error(error.message);
+  }
+}
+
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    updateDoc(doc(db, "users", user.displayName), {
+      isOnline: true,
+    });
     store.dispatch(login(user))
   } else {
     store.dispatch(logout())
@@ -157,11 +172,13 @@ export const userUpdate = async (name, phone, desc, downloadURL) => {
 
 export const userDelete = async (user) => {
   try {
-    const storageRef = ref(storage, `images/users/${user.uid}`);
+    // const storageRef = ref(storage, `images/users/${user.uid}`);
 
-    deleteObject(storageRef)
+    // deleteObject(storageRef)
 
+    deleteDoc(doc(db, "users", `${user.username}/friends`))
     deleteDoc(doc(db, "users", user.username))
+    deleteDoc(doc(db, "usersChats", user.uid))
 
   } catch (error) {
     toast.error(error.message)
@@ -198,7 +215,6 @@ export const userBlock = async (user) => {
 
 export const userDeblock = async (item) => {
   try {
-    console.log(item);
     await deleteDoc(doc(db, "users", `${auth.currentUser.displayName}/blocks/${item.id}`))
     toast.success(`${item.user.username} Deblocked !`)
   } catch (error) {

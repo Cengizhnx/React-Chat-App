@@ -90,7 +90,7 @@ function GroupManage({ userid }) {
                 inline={true}
             >
                 {
-                    isManager && <Link onClick={() => handleDeleteAdmin()} className="w-full">
+                    isManager && Object.keys(managers).length > 1 && <Link onClick={() => handleDeleteAdmin()} className="w-full">
                         <Dropdown.Item>
                             <GrUserAdmin className="h-5 w-5 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
                             Remove Admin

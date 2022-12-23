@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Dropdown } from "flowbite-react";
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete } from "react-icons/ai";
@@ -10,9 +10,12 @@ import { useEffect } from 'react';
 function ChatMenu() {
 
     const chatId = useSelector(state => state.users.chatId)
+    const [users, setUsers] = useState([])
 
     const selectUser = useSelector(state => state.users.selectUser)
-    // const messages = useSelector(state => state.users.allMessages)
+    const groupState = useSelector(state => state.users.groupState)
+    const isUser = users.findIndex((item) => item.uid === auth.currentUser.uid) >= 0;
+    console.log(isUser);
 
     function hidevisible_chat() {
         document.getElementById("landing2").style.display = "none";
@@ -39,11 +42,22 @@ function ChatMenu() {
             }
         }
 
-        chatId && getMessages()
+        const getUser = () => {
+            if (selectUser.type === "group") {
+
+                const response = onSnapshot(doc(db, "userChats", auth.currentUser.uid), (doc) => {
+                    doc.exists() && setUsers(doc.data()[chatId].groupPrew)
+                })
+                return () => {
+                    response()
+                }
+            }
+        }
+
+
+        chatId && getMessages() && getUser()
 
     }, [chatId])
-
-    console.log(selectUser.type);
 
     const deleteChat = async () => {
 
@@ -64,6 +78,13 @@ function ChatMenu() {
                 await updateDoc(chatRef1, {
                     [chatId]: deleteField()
                 });
+            }
+            else {
+                if (!isUser || !groupState ) {
+                    await updateDoc(chatRef1, {
+                        [chatId]: deleteField()
+                    });
+                }
             }
 
 

@@ -18,7 +18,7 @@ function Home() {
 
     DarkMode();
     const { user } = useSelector(state => state.users)
-    console.log(user);
+
     const data = GetUserProfile()
     const blocks = GetUserBlocks()
     const friends = GetUserFriends()

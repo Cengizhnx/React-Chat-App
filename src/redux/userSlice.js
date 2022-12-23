@@ -12,6 +12,7 @@ export const userSlice = createSlice({
         groupChats: false,
         groupUsers: false,
         groupState: true,
+        userState: true,
     },
     reducers: {
         login: (state, action) => {
@@ -58,9 +59,12 @@ export const userSlice = createSlice({
         groupState: (state, action) => {
             state.groupState = action.payload;
         },
+        userState: (state, action) => {
+            state.userState = action.payload;
+        },
     }
 })
 
-export const { login, logout, addSelectUSer, chatID, chats, addGroupPrew, deleteGroupPrew, resetGroupPrew, groupChats, groupUsers, groupState } = userSlice.actions;
+export const { login, logout, addSelectUSer, chatID, chats, addGroupPrew, deleteGroupPrew, resetGroupPrew, groupChats, groupUsers, groupState, userState } = userSlice.actions;
 
 export default userSlice.reducer;
