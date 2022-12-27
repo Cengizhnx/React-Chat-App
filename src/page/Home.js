@@ -13,6 +13,7 @@ import Block from './Block'
 import Friends from './Friends'
 import DarkMode from '../components/DarkMode'
 import Group from '../components/Group/Group'
+import Stories from '../components/Stories/Stories'
 
 function Home() {
 
@@ -55,6 +56,9 @@ function Home() {
                     </div>
                     <div style={{ display: "none" }} id='div_friends' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
                         <Friends friends={friends}></Friends>
+                    </div>
+                    <div style={{ display: "none" }} id='div_stories' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
+                        <Stories friends={friends}></Stories>
                     </div>
                     <div style={{ display: "none" }} id='div_group' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 xs:w-full sm:w-2/4 h-full flex flex-col justify-center items-center rounded-l-2xl shadow-2xl">
                         <Group></Group>

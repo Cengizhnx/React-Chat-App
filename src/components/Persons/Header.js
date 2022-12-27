@@ -65,17 +65,15 @@ function Header({ data }) {
         document.getElementById("div_friends").style.display = "block";
     }
 
+    function hidevisible_stories() {
+        document.getElementById("div_left").style.display = "none";
+        document.getElementById("div_stories").style.display = "block";
+    }
+
     function hidevisible_group() {
         document.getElementById("div_left").style.display = "none";
         document.getElementById("div_group").style.display = "block";
     }
-
-
-    // useEffect(() => {
-    //     if (!status) {
-    //         getUserPhoto2()
-    //     }
-    // }, [status, user])
 
     return (
         <div className='w-full h-16 mb-1 rounded-tl-xl flex items-center dark:text-white bg-bgLight2 dark:bg-bgDark2'>
@@ -97,6 +95,13 @@ function Header({ data }) {
                         </Link>
 
                         <Dropdown.Divider />
+                        {/* <Link onClick={hidevisible_stories} className="w-full">
+                            <Dropdown.Item>
+                                <RiChatSmile3Line className="h-6 w-6 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />
+                                Stories
+                            </Dropdown.Item>
+                        </Link> */}
+
                         <Link onClick={hidevisible_friends} className="w-full">
                             <Dropdown.Item>
                                 <RiChatSmile3Line className="h-6 w-6 mr-2 hover:bg-white hover:text-black hover:rounded-2xl hover:cursor-pointer" />

@@ -36,7 +36,7 @@ function Bio({ blocks, friends }) {
     const groupUsers = useSelector(state => state.users.groupUsers)
     const groupStates = useSelector(state => state.users.groupState)
     const userState = useSelector(state => state.users.userState)
-    console.log(selectUser);
+
     const [image, setImage] = useState(null)
 
     const [name, setName] = useState(selectUser.name)
@@ -49,20 +49,20 @@ function Bio({ blocks, friends }) {
     const friend = friends?.filter((item) => item.user.username === selectUser.username)
 
     const handleBlock = async () => {
-        // await userBlock(selectUser)
-        await updateDoc(doc(db, "blocks", chatId), {
-            [auth.currentUser.uid]: true,
-            [selectUser.uid]: true,
-            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
-        })
+        await userBlock(selectUser)
+        // await updateDoc(doc(db, "blocks", chatId), {
+        //     [auth.currentUser.uid]: true,
+        //     [selectUser.uid]: true,
+        //     [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        // })
     }
 
     const handleDeblock = async (item) => {
-        // await userDeblock(item)
-        await updateDoc(doc(db, "blocks", chatId), {
-            [auth.currentUser.uid]: false,
-            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
-        })
+        await userDeblock(item)
+        // await updateDoc(doc(db, "blocks", chatId), {
+        //     [auth.currentUser.uid]: false,
+        //     [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        // })
     }
 
     const handleAddFriends = async () => {
@@ -368,7 +368,7 @@ function Bio({ blocks, friends }) {
 
                     <div className='w-5/6 flex flex-col justify-center items-center px-8 py-4 my-4 border-y-2 rounded-2xl border-bgLight2 dark:border-bioBorder'>
                         {
-                            selectUser.type !== "group" && block === true && userState && <div onClick={() => handleDeblock(filtered[0])} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
+                            selectUser.type !== "group" && filtered?.length > 0 && userState && <div onClick={() => handleDeblock(filtered[0])} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
                                 <div className='flex justify-center items-center'>
                                     <BiBlock className="h-6 w-6" />
                                 </div>
@@ -376,7 +376,7 @@ function Bio({ blocks, friends }) {
                             </div>
                         }
                         {
-                            selectUser.type !== "group" && block === false && userState && <div onClick={() => handleBlock()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
+                            selectUser.type !== "group" && filtered?.length <= 0 && userState && <div onClick={() => handleBlock()} className='w-full h-8 flex flex-row justify-evenly items-center text-red-600 dark:text-red-400 rounded-lg hover:bg-messageHoverLight dark:hover:bg-messageHover hover:cursor-pointer mb-5'>
                                 <div className='flex justify-center items-center'>
                                     <BiBlock className="h-6 w-6" />
                                 </div>

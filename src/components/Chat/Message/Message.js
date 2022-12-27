@@ -4,7 +4,7 @@ import { BiMessageRounded } from "react-icons/bi";
 import { IoMdImages } from "react-icons/io";
 import { BsEmojiWink } from "react-icons/bs";
 import { useDispatch, useSelector } from 'react-redux';
-import { auth, db, storage } from '../../../firebase';
+import { auth, db, GetSelectUserBlocks, storage } from '../../../firebase';
 import { v4 as uuid } from "uuid";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -16,7 +16,7 @@ import Picker from '@emoji-mart/react'
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
-function Message({ blocks }) {
+function Message({ blocks, selectBlocks }) {
 
   const [text, setText] = useState("")
   const [img, setImg] = useState("")
@@ -32,6 +32,10 @@ function Message({ blocks }) {
   const groupUsers = useSelector(state => state.users.groupUsers)
   const groupStates = useSelector(state => state.users.groupState)
 
+  const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
+
+  const find = selectBlocks?.filter((item) => item.user.username === auth.currentUser.displayName)
+
   const isThere = selectUser.type === "group" && [groupUsers]?.findIndex(function (item) {
     for (let i = 0; i < item.length; i++) {
       const temp = item[i].uid === auth.currentUser.uid
@@ -41,7 +45,6 @@ function Message({ blocks }) {
     }
   }) >= 0;
 
-  const filtered = blocks?.filter((item) => item.user.username === selectUser.username)
 
   const handleKey = (e) => {
     e.code === "Enter" && handleSend();
@@ -313,12 +316,20 @@ function Message({ blocks }) {
           <BsEmojiWink className="w-7 h-7 text-bgDark2 dark:text-loginInfo" />
           <div className='dark:hidden'>
             <div style={{ display: openPicker ? "inline" : "none", bottom: 100, position: 'fixed' }}>
-              <Picker data={data} theme="light" onEmojiSelect={(e) => setText(text + e.native)} />
+              {
+                filtered?.length <= 0 && find?.length <= 0 &&
+                <Picker data={data} theme="light" onEmojiSelect={(e) => setText(text + e.native)} />
+
+              }
             </div>
           </div>
           <div className='hidden dark:block'>
             <div style={{ display: openPicker ? "inline" : "none", bottom: 100, position: 'fixed' }}>
-              <Picker data={data} theme="dark" onEmojiSelect={(e) => setText(text + e.native)} />
+              {
+                filtered?.length <= 0 && find?.length <= 0 &&
+                <Picker data={data} theme="light" onEmojiSelect={(e) => setText(text + e.native)} />
+
+              }
             </div>
           </div>
 
@@ -330,7 +341,11 @@ function Message({ blocks }) {
             style={{ display: "none" }}
             id="file"
             accept="image/png,image/jpeg"
-            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false && userIsThere ? false : true}
+            disabled={selectUser.type === "group"
+              ? isThere === false || !groupStates
+                ? true
+                : false
+              : filtered?.length <= 0 && find?.length <= 0 && userIsThere ? false : true}
             onChange={(e) => setImg(e.target.files[0])}
           />
           <label htmlFor="file">
@@ -348,7 +363,11 @@ function Message({ blocks }) {
         <div className='flex flex-row justify-start items-center w-5/6 h-12 p-1 rounded-lg bg-bgLight2 dark:bg-bgDark2'>
           <input
             value={text}
-            disabled={selectUser.type === "group" ? isThere === false || !groupStates ? true : false : senderBlock === false && block === false && userIsThere ? false : true}
+            disabled={selectUser.type === "group"
+              ? isThere === false || !groupStates
+                ? true
+                : false
+              : filtered?.length <= 0 && find?.length <= 0 && userIsThere ? false : true}
             onKeyDown={handleKey}
             onChange={(e) => setText(e.target.value)}
             className='relative w-full rounded-md bg-bgLight1 text-bgDark1 dark:text-bgLight2 dark:bg-bgDarkInput focus:ring-2 focus:ring-white dark:focus:ring-bgDark0'

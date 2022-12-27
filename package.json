@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.0.3",
     "react-hot-toast": "^2.4.0",
+    "react-insta-stories": "^2.4.2",
     "react-phone-number-input": "^3.2.11",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",

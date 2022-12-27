@@ -131,6 +131,13 @@ export const GetUserBlocks = () => {
   return cart;
 }
 
+export const GetSelectUserBlocks = () => {
+  const selectUser = useSelector(state => state.users.selectUser);
+
+  const [cart] = useCollectionData(collection(db, `users/${selectUser.username}/blocks`).withConverter(userConverter))
+  return cart;
+}
+
 export const GetUserFriends = () => {
   const activeUser = useSelector(state => state.users.user);
 
@@ -182,18 +189,18 @@ export const userBlock = async (user) => {
       user: user,
       timeStamp: serverTimestamp()
     })
-    await addDoc(collection(db, "users", `${user.username}/blocks`), {
-      user: {
-        description: auth.currentUser.displayName,
-        name: auth.currentUser.displayName,
-        photoURL: auth.currentUser.photoURL,
-        phone_number: auth.currentUser.phoneNumber,
-        timeStamp: serverTimestamp(),
-        uid: auth.currentUser.uid,
-        username: auth.currentUser.displayName,
-      },
-      timeStamp: serverTimestamp()
-    })
+    // await addDoc(collection(db, "users", `${user.username}/blocks`), {
+    //   user: {
+    //     description: auth.currentUser.displayName,
+    //     name: auth.currentUser.displayName,
+    //     photoURL: auth.currentUser.photoURL,
+    //     phone_number: auth.currentUser.phoneNumber,
+    //     timeStamp: serverTimestamp(),
+    //     uid: auth.currentUser.uid,
+    //     username: auth.currentUser.displayName,
+    //   },
+    //   timeStamp: serverTimestamp()
+    // })
     toast.success(`${user.username} blocked !`)
   } catch (error) {
     toast.error(error.message)
