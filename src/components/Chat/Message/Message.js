@@ -307,8 +307,6 @@ function Message({ blocks, selectBlocks }) {
     setImg("");
   }
 
-  console.log(text);
-
   return (
     <div id="chat_footer" className='w-full h-20 rounded-br-xl flex items-center bg-bgLight2 dark:bg-bgDark2 border-t-2 border-gray-300 dark:border-messageHover'>
       <div className='w-full px-3 flex flex-row items-center justify-around' >

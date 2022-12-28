@@ -43,7 +43,7 @@ function Home() {
             {
                 user && data && blocks && friends && <div className="bg-bgLight1 dark:bg-bgDark0 w-full flex flex-row items-center p-4 justify-center h-screen">
                     <div id='div_left' className="dark:text-white bg-bgLight1 dark:bg-bgDark1 sm:w-2/4 h-full flex flex-col justify-start items-center rounded-l-2xl shadow-2xl">
-                        <Header data={data}></Header>
+                        <Header data={data} blocks={blocks} friends={friends}></Header>
                         <Search></Search>
                         <MessageList blocks={blocks}></MessageList>
 

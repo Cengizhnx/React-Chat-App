@@ -43,12 +43,12 @@ export const userRegister = async (value, username, downloadURL) => {
     });
 
     await setDoc(doc(db, "userChats", auth.currentUser.uid), {
-      createdAt: serverTimestamp()
+      
     });
 
-    await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
-      createdAt: deleteField()
-    });
+    // await updateDoc(doc(db, "userChats", auth.currentUser.uid), {
+    //   createdAt: deleteField()
+    // });
 
   } catch (error) {
     toast.error(error.message)
@@ -166,20 +166,29 @@ export const userUpdate = async (name, phone, desc, downloadURL) => {
 
 // User Account Delete
 
-export const userDelete = async (user) => {
-  try {
-    // const storageRef = ref(storage, `images/users/${user.uid}`);
 
-    // deleteObject(storageRef)
 
-    deleteDoc(doc(db, "users", `${user.username}/friends`))
-    deleteDoc(doc(db, "users", user.username))
-    deleteDoc(doc(db, "usersChats", user.uid))
+// export const UserDelete = async (user) => {
 
-  } catch (error) {
-    toast.error(error.message)
-  }
-}
+//   try {
+//     // const storageRef = ref(storage, `images/users/${user.uid}`);
+
+//     // deleteObject(storageRef)
+//     if (cart.length > 0) {
+//       await deleteDoc(doc(db, "users", `${user.username}/friends`))
+//     }
+
+//     if (blck.length > 0) {
+//       await deleteDoc(doc(db, "users", `${user.username}/blocks`))
+//     }
+
+//     await deleteDoc(doc(db, "users", user.username))
+//     await deleteDoc(doc(db, "usersChats", user.uid))
+
+//   } catch (error) {
+//     toast.error(error.message)
+//   }
+// }
 
 // User Block
 

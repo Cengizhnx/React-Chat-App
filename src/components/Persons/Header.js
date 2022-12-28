@@ -4,13 +4,15 @@ import { RiChatSmile3Line } from "react-icons/ri";
 import { BiBlock } from "react-icons/bi";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, getUserPhoto2, userDelete, userLogout } from '../../firebase';
+import { auth, db, GetUserBlocks, GetUserFriends, getUserPhoto2, UserDelete, userLogout } from '../../firebase';
 import { logout } from '../../redux/userSlice';
 import { Dropdown } from "flowbite-react";
 import { deleteUser } from 'firebase/auth';
 import { HiUserGroup } from "react-icons/hi";
 
 import Theme from "../Theme";
+import { deleteDoc, deleteField, doc, updateDoc } from 'firebase/firestore';
+import { toast, Toaster } from 'react-hot-toast';
 
 function Header({ data }) {
 
@@ -19,6 +21,39 @@ function Header({ data }) {
 
     const status = useSelector(state => state.users.status)
     const user = data.find(item => item.uid === auth.currentUser.uid)
+
+    const blocks = GetUserBlocks()
+    const friends = GetUserFriends()
+
+    const userRef = doc(db, 'users', `${auth.currentUser.displayName}`);
+
+    const userDelete = async (user) => {
+
+        try {
+            // const storageRef = ref(storage, `images/users/${user.uid}`);
+
+            // deleteObject(storageRef)
+            if (friends?.length > 0) {
+                // await deleteDoc(doc(db, "users", `${user.username}/friends`))
+                await updateDoc(userRef, {
+                    friends: deleteField()
+                });
+            }
+
+            if (blocks?.length > 0) {
+                await updateDoc(userRef, {
+                    blocks: deleteField()
+                });
+            }
+
+            await deleteDoc(doc(db, "users", user.username))
+            // await deleteDoc(doc(db, "usersChats", user.uid))
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
     const handleDeleteUser = async () => {
         if (window.confirm("Are you sure you want to delete the account ?")) {
@@ -144,7 +179,7 @@ function Header({ data }) {
                     </Dropdown>
                 </div>
             </div>
-
+            <Toaster position='top-right'></Toaster>
         </div>
     )
 }

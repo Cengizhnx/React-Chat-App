@@ -15,7 +15,6 @@ function ChatMenu() {
     const selectUser = useSelector(state => state.users.selectUser)
     const groupState = useSelector(state => state.users.groupState)
     const isUser = users.findIndex((item) => item.uid === auth.currentUser.uid) >= 0;
-    console.log(isUser);
 
     function hidevisible_chat() {
         document.getElementById("landing2").style.display = "none";
