@@ -59,9 +59,6 @@ function Block({ blocks }) {
                     }
                 </div>
             }
-
-
-
             <Toaster position='top-right'></Toaster>
 
         </div>

@@ -50,19 +50,19 @@ function Bio({ blocks, friends }) {
 
     const handleBlock = async () => {
         await userBlock(selectUser)
-        // await updateDoc(doc(db, "blocks", chatId), {
-        //     [auth.currentUser.uid]: true,
-        //     [selectUser.uid]: true,
-        //     [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
-        // })
+        await updateDoc(doc(db, "blocks", chatId), {
+            [auth.currentUser.uid]: true,
+            [selectUser.uid]: true,
+            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        })
     }
 
     const handleDeblock = async (item) => {
         await userDeblock(item)
-        // await updateDoc(doc(db, "blocks", chatId), {
-        //     [auth.currentUser.uid]: false,
-        //     [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
-        // })
+        await updateDoc(doc(db, "blocks", chatId), {
+            [auth.currentUser.uid]: false,
+            [auth.currentUser.uid + "blockedDate"]: Timestamp.now()
+        })
     }
 
     const handleAddFriends = async () => {
@@ -260,7 +260,8 @@ function Bio({ blocks, friends }) {
                         <p className='text-sm tracking-wider text-loginTextBg dark:text-phoneNumber mt-1'>{selectUser.description ? selectUser.description : selectUser.username}</p>
                     </div>
 
-                    {/* {
+                    {
+                    /* {
                     selectUser.type === "group" &&
                     <div className='w-5/6 h-20 flex flex-col justify-center mt-4 py-5 px-8 border-y-2 rounded-2xl border-bgLight2 dark:border-bioBorder'>
 
@@ -268,7 +269,8 @@ function Bio({ blocks, friends }) {
                             <GroupAddUser></GroupAddUser>
                         </div>
                     </div>
-                } */}
+                } */
+                }
 
                     {
                         selectUser.type === "group" && groupStates &&

@@ -13,7 +13,8 @@ function LandingPage() {
             <div className='w-full flex flex-col items-center justify-center'>
                 <img className='w-2/6 rounded-full shadow-2xl shadow-neutral-900' src={Landing} alt="landing" />
                 <h1 className='text-3xl my-8 tracking-wide text-black dark:text-white loadingText'>ChatApp Web</h1>
-                <p className='w-1/2 text-sm text-center tracking-wider text-black dark:text-gray-300 landingText'>Lorem ipsum dolor sit amet consectetur adipisicing elit. <br /> Unde quo accusamus placeat a?</p>
+                <p className='w-1/2 text-sm text-center tracking-wider text-black dark:text-gray-300 landingText'>
+                    This app is developed by Mitala Samuel <br />with Love</p>
             </div>
 
         </div>

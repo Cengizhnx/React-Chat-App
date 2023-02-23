@@ -12,7 +12,7 @@ export default function DarkMode() {
         root.classList.add(theme);
 
         localStorage.setItem("theme", theme)
-
-    }, [theme, colorTheme])
+    },
+        [theme, colorTheme])
     return [colorTheme, setTheme];
 }
