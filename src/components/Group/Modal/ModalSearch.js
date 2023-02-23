@@ -37,7 +37,6 @@ function ModalSearch() {
                     onChange={(e) => getUser(e.target.value)}
                 />
                 <HiOutlineSearch className="h-5 w-5 mx-3 absolute text-phoneNumber" />
-
             </div>
             {
                 user &&

@@ -11,7 +11,7 @@ function GroupAddUser() {
 
     return (
         <div>
-            <React.Fragment>
+            <>
                 <button onClick={() => setVisible(true)}>
                     <div className='w-full h-8 flex flex-row justify-center items-center text-green-500 dark:text-green-400 rounded-lg hover:cursor-pointer'>
                         <div className='flex justify-center items-center mr-3'>
@@ -34,7 +34,7 @@ function GroupAddUser() {
                     </Modal.Body>
 
                 </Modal>
-            </React.Fragment>
+            </>
         </div>
     )
 }
